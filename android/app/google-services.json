@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "208111318998",
+    "project_id": "whiztech-first",
+    "storage_bucket": "whiztech-first.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:208111318998:android:a66dc61592da5cf54d5677",
+        "android_client_info": {
+          "package_name": "com.example.whiztech_flutter_first_project"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "208111318998-4n00k0e8id2vkeibchtcho603lkftbnr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAm3H-iDOf2xKFb4berm-hciIUUB-_S8T4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "208111318998-4n00k0e8id2vkeibchtcho603lkftbnr.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
