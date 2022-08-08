@@ -2,14 +2,15 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:whiztech_flutter_first_project/models/property_type.dart';
 import '../constants/DUMMY_DATA.dart';
 import '../constants/constants.dart';
 import '../models/client.dart';
+import '../models/property_type.dart';
 import '../providers/card_state_provider.dart';
 import '../utils/utils.dart';
 import '../widgets/bottom_sheet_field.dart';
 import '../providers/user.dart' as userProvider;
+import '../widgets/save_form_button.dart';
 
 class FormBottomSheet extends StatefulWidget {
   final index;
@@ -261,10 +262,11 @@ class _FormBottomSheetState extends State<FormBottomSheet> {
               Container(
                 width: 120,
                 margin: const EdgeInsets.only(bottom: 10),
-                child: ElevatedButton(
-                  onPressed: () {
+                child: SaveFormButton(
+                  onSavePressed: () async {
                     if (_saveForm()) {
                       try {
+                        late Map<String, Object> json;
                         if (selectedCard == fieldNames[0]) {
                           Client client = Client(
                             name: _name,
@@ -272,27 +274,26 @@ class _FormBottomSheetState extends State<FormBottomSheet> {
                             email: _email,
                             address: _address,
                           );
-                          // upload client to firebase
-                          uploadClient(client);
+                          // upload client to firestore
+                          json = client.toJson();
                         } else if (selectedCard == fieldNames[1]) {
                           PropertyType propertyType = PropertyType(
                             name: _name,
                             location: _location,
                           );
+                          // upload propertyType to firestore
+                          json = propertyType.toJson();
                           // upload propertyType to firebase
                         } else if (selectedCard == fieldNames[2]) {
                         } else if (selectedCard == fieldNames[3]) {
                         } else if (selectedCard == fieldNames[4]) {
                         } else if (selectedCard == fieldNames[5]) {}
+                        await uploadToFirestore(json);
                       } catch (exception) {
                         print(exception.toString());
                       }
                     }
                   },
-                  style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all(kPrimaryColor),
-                  ),
-                  child: const Text('Save'),
                 ),
               ),
             ],
@@ -303,9 +304,6 @@ class _FormBottomSheetState extends State<FormBottomSheet> {
   }
 
   bool _saveForm() {
-    // setState(() {
-    //   _submitted = true;
-    // });
     final isValid = _form.currentState
         ?.validate(); // calls onValidate method of each textFormField
     if (!isValid!) return false;
@@ -313,11 +311,13 @@ class _FormBottomSheetState extends State<FormBottomSheet> {
     return true;
   }
 
-  Future uploadClient(Client client) async {
+  Future uploadToFirestore(Map<String, Object> json) async {
     try {
-      await _firestore.collection('forms').doc(_currentUser.userId).set(
-            client.toJson(),
-          );
+      await _firestore
+          .collection('forms')
+          .doc(_currentUser.userId)
+          .collection(selectedCard)
+          .add(json);
     } on FirebaseAuthException catch (e) {
       Utils.showSnackBar(context, e.message.toString(), 2000);
     } catch (e) {

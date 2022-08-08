@@ -23,6 +23,7 @@ class _HomeScreenState extends State<HomeScreen> {
   final _firestore = FirebaseFirestore.instance;
   late String _uId;
   late Future<Map<dynamic, dynamic>> _userFuture;
+  var bottomSheetController;
 
   @override
   void initState() {
@@ -64,7 +65,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     onTap: () {
                       Provider.of<CardStateProvider>(context, listen: false)
                           .setSelectedCard(cardNames.keys.toList()[index]);
-                      showModalBottomSheet(
+                      bottomSheetController = showModalBottomSheet(
                           context: context,
                           isScrollControlled: true,
                           backgroundColor: Colors.transparent,
@@ -88,7 +89,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Future<Map<dynamic, dynamic>> getUser() async {
     final User? user = auth.currentUser;
-    Map<dynamic, dynamic> json;
     _uId = user!.uid;
     final response = await _firestore.collection('users').get();
     return response.docs.first.data();
