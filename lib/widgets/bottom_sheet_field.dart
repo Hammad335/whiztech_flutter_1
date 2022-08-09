@@ -4,8 +4,8 @@ import '../constants/constants.dart';
 
 class BottomSheetField extends StatelessWidget {
   String title;
-  TextFormField textFormField;
-  BottomSheetField({required this.title, required this.textFormField});
+  Widget child;
+  BottomSheetField({required this.title, required this.child});
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +22,7 @@ class BottomSheetField extends StatelessWidget {
             ),
             const SizedBox(width: 6),
             Expanded(
-              child: textFormField,
+              child: child,
             ),
           ],
         ),

@@ -71,7 +71,8 @@ class _HomeScreenState extends State<HomeScreen> {
                           backgroundColor: Colors.transparent,
                           builder: (context) {
                             return SingleChildScrollView(
-                                child: FormBottomSheet(index: index));
+                              child: FormBottomSheet(index: index),
+                            );
                           });
                     },
                     child: FormCard(cardName: cardNames.keys.toList()[index]),
