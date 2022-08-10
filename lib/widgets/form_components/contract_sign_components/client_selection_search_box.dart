@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:provider/provider.dart';
-import 'package:whiztech_flutter_first_project/providers/client_provider.dart';
-import 'package:whiztech_flutter_first_project/providers/property_type_provider.dart';
+import 'package:whiztech_flutter_first_project/providers/client_creation/clients.dart';
+import 'package:whiztech_flutter_first_project/providers/property_type/property_types.dart';
 import '../../../constants/constants.dart';
 
 class ClientSelectionSearchBox extends StatefulWidget {
@@ -20,13 +20,13 @@ class ClientSelectionSearchBox extends StatefulWidget {
 }
 
 class _ClientSelectionSearchBoxState extends State<ClientSelectionSearchBox> {
-  late ClientProvider provider;
+  late Clients provider;
   late TextEditingController _controller;
 
   @override
   void initState() {
     super.initState();
-    provider = Provider.of<ClientProvider>(context, listen: false);
+    provider = Provider.of<Clients>(context, listen: false);
     _controller = TextEditingController();
   }
 
@@ -86,7 +86,7 @@ class _ClientSelectionSearchBoxState extends State<ClientSelectionSearchBox> {
           );
         },
         onSuggestionSelected: (suggestion) {
-          // _controller.text = suggestion;
+          _controller.text = suggestion;
         },
         onSaved: (clientSelection) {
           if (clientSelection == null) return;

@@ -5,10 +5,12 @@ import 'package:intl/intl.dart';
 class DateTimePicker extends StatefulWidget {
   final FocusNode dateTimeFocusNode;
   final Function dateTimeCallBack;
+  final String hint;
 
   DateTimePicker({
     required this.dateTimeFocusNode,
     required this.dateTimeCallBack,
+    required this.hint,
   });
 
   @override
@@ -28,7 +30,7 @@ class _DateTimePickerState extends State<DateTimePicker> {
         style: kTitleSmall.copyWith(color: kPrimaryColor),
         decoration: InputDecoration(
           suffixIcon: const Icon(Icons.date_range_sharp, color: kPrimaryColor),
-          hintText: 'Select end date ',
+          hintText: widget.hint,
           hintStyle: kTitleSmall.copyWith(
             color: widget.dateTimeFocusNode.hasFocus ? kPrimaryColor : kWhite,
           ),

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:whiztech_flutter_first_project/models/property.dart';
 
-class PropertyProvider with ChangeNotifier {
+class Properties with ChangeNotifier {
   List<Property> _properties = [];
 
   void addProperty(Property property) {

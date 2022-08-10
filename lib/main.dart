@@ -4,10 +4,13 @@ import 'package:whiztech_flutter_first_project/pages/credentials_screen.dart';
 import 'package:whiztech_flutter_first_project/pages/home_screen.dart';
 import 'package:whiztech_flutter_first_project/providers/card_state_provider.dart';
 import 'package:provider/provider.dart';
-import 'package:whiztech_flutter_first_project/providers/client_provider.dart';
-import 'package:whiztech_flutter_first_project/providers/contract_sign_provider.dart';
-import 'package:whiztech_flutter_first_project/providers/property_provider.dart';
-import 'package:whiztech_flutter_first_project/providers/property_type_provider.dart';
+import 'package:whiztech_flutter_first_project/providers/client_creation/clients.dart';
+import 'package:whiztech_flutter_first_project/providers/contract_sign/contract_sign_provider.dart';
+import 'package:whiztech_flutter_first_project/providers/contract_sign_amount_disc_provider.dart';
+import 'package:whiztech_flutter_first_project/providers/create_property/properties.dart';
+import 'package:whiztech_flutter_first_project/providers/property_type/property_type_provider.dart';
+import 'package:whiztech_flutter_first_project/providers/create_property/property_provider.dart';
+import 'package:whiztech_flutter_first_project/providers/property_type/property_types.dart';
 import 'package:whiztech_flutter_first_project/providers/user.dart';
 
 void main() async {
@@ -34,13 +37,22 @@ class MyApp extends StatelessWidget {
           create: (_) => ContractSignProvider(),
         ),
         ChangeNotifierProvider(
+          create: (_) => PropertyTypes(),
+        ),
+        ChangeNotifierProvider(
           create: (_) => PropertyTypeProvider(),
         ),
         ChangeNotifierProvider(
-          create: (_) => ClientProvider(),
+          create: (_) => Clients(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => Properties(),
         ),
         ChangeNotifierProvider(
           create: (_) => PropertyProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => ContractSignAmountDiscProvider(),
         ),
       ],
       child: MaterialApp(

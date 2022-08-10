@@ -6,9 +6,10 @@ import 'package:whiztech_flutter_first_project/models/property_type.dart';
 import 'package:whiztech_flutter_first_project/pages/form_bottom_sheet.dart';
 import 'package:whiztech_flutter_first_project/providers/card_state_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:whiztech_flutter_first_project/providers/client_provider.dart';
-import 'package:whiztech_flutter_first_project/providers/property_provider.dart';
-import 'package:whiztech_flutter_first_project/providers/property_type_provider.dart';
+import 'package:whiztech_flutter_first_project/providers/client_creation/clients.dart';
+import 'package:whiztech_flutter_first_project/providers/contract_sign_amount_disc_provider.dart';
+import 'package:whiztech_flutter_first_project/providers/create_property/properties.dart';
+import 'package:whiztech_flutter_first_project/providers/property_type/property_types.dart';
 import '../models/client.dart';
 import '../providers/user.dart' as userProvider;
 import '../constants/DUMMY_DATA.dart';
@@ -85,8 +86,8 @@ class _HomeScreenState extends State<HomeScreen> {
               for (var type in clientsList) {
                 lst1.add(Client.fromJson(type.data()));
               }
-              Provider.of<ClientProvider>(context, listen: false)
-                  .populateClients = lst1;
+              Provider.of<Clients>(context, listen: false).populateClients =
+                  lst1;
 
               // populate propertyType data fetched from firestore
               final propertyTypeList = snapshot.data![2]
@@ -95,7 +96,7 @@ class _HomeScreenState extends State<HomeScreen> {
               for (var type in propertyTypeList) {
                 lst2.add(PropertyType.fromJson(type.data()));
               }
-              Provider.of<PropertyTypeProvider>(context, listen: false)
+              Provider.of<PropertyTypes>(context, listen: false)
                   .populatePropertyTypes = lst2;
 
               // populate properties data fetched from firestore
@@ -105,7 +106,7 @@ class _HomeScreenState extends State<HomeScreen> {
               for (var type in propertiesList) {
                 lst3.add(Property.fromJson(type.data()));
               }
-              Provider.of<PropertyProvider>(context, listen: false)
+              Provider.of<Properties>(context, listen: false)
                   .populateProperties = lst3;
               return Container(
                 margin: const EdgeInsets.only(top: 110),

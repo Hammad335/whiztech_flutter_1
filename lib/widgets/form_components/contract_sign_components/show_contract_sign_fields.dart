@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:whiztech_flutter_first_project/constants/DUMMY_DATA.dart';
-import 'package:whiztech_flutter_first_project/providers/contract_sign_provider.dart';
+import 'package:whiztech_flutter_first_project/providers/contract_sign/contract_sign_provider.dart';
 import '../contract_sign_components/client_selection_search_box.dart';
 import '../../bottom_sheet_field.dart';
 import '../contract_sign_components/amount_textform_field.dart';
@@ -67,20 +66,25 @@ class _ShowContractSignFieldsState extends State<ShowContractSignFields> {
         BottomSheetField(
           title: 'Contract Start Date :',
           child: DateTimePicker(
-              dateTimeFocusNode: _startDateFocusNode,
-              dateTimeCallBack: _contractStartDateCallBack),
+            dateTimeFocusNode: _startDateFocusNode,
+            dateTimeCallBack: _contractStartDateCallBack,
+            hint: 'Select start date ',
+          ),
         ),
         BottomSheetField(
           title: 'Contract End Date :',
           child: DateTimePicker(
-              dateTimeFocusNode: _endDateFocusNode,
-              dateTimeCallBack: _contractEndDateCallBack),
+            dateTimeFocusNode: _endDateFocusNode,
+            dateTimeCallBack: _contractEndDateCallBack,
+            hint: 'Select end date ',
+          ),
         ),
         BottomSheetField(
           title: 'Amount :',
           child: AmountTextFormField(
             amountFocusNode: _amountFocusNode,
             amountCallBack: _amountCallBack,
+            fieldName: 'amount',
           ),
         ),
         BottomSheetField(
@@ -88,7 +92,8 @@ class _ShowContractSignFieldsState extends State<ShowContractSignFields> {
           child: AmountTextFormField(
             amountFocusNode: _taxVatPercentFocusNode,
             amountCallBack: _taxVatPercentCallBack,
-            append: 'Enter percentage \'%\'',
+            fieldName: 'tax_vat_%',
+            append: 'Enter tax/vat Percentage %',
           ),
         ),
         BottomSheetField(
@@ -96,6 +101,9 @@ class _ShowContractSignFieldsState extends State<ShowContractSignFields> {
           child: AmountTextFormField(
             amountFocusNode: _taxVatAmountFocusNode,
             amountCallBack: _taxVatAmountCallBack,
+            fieldName: 'tax_vat_amount',
+            append: 'Amount (auto calculated)',
+            readOnly: true,
           ),
         ),
         BottomSheetField(
@@ -103,6 +111,7 @@ class _ShowContractSignFieldsState extends State<ShowContractSignFields> {
           child: AmountTextFormField(
             amountFocusNode: _discountPercentFocusNode,
             amountCallBack: _discountPercentCallBack,
+            fieldName: 'discount_%',
             append: 'Enter discount percentage \'%\'',
           ),
         ),
@@ -111,6 +120,9 @@ class _ShowContractSignFieldsState extends State<ShowContractSignFields> {
           child: AmountTextFormField(
             amountFocusNode: _discountAmountFocusNode,
             amountCallBack: _discountAmountCallBack,
+            fieldName: 'discount_amount',
+            append: 'Amount (auto calculated)',
+            readOnly: true,
           ),
         ),
       ],

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../constants/constants.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
-import '../../../providers/property_provider.dart';
+import '../../../providers/create_property/properties.dart';
 
 class PropertySelectionSearchBox extends StatefulWidget {
   final FocusNode propertySelectionFocusNode;
@@ -20,13 +20,13 @@ class PropertySelectionSearchBox extends StatefulWidget {
 
 class _PropertySelectionSearchBoxState
     extends State<PropertySelectionSearchBox> {
-  late PropertyProvider provider;
+  late Properties provider;
   late TextEditingController _controller;
 
   @override
   void initState() {
     super.initState();
-    provider = Provider.of<PropertyProvider>(context, listen: false);
+    provider = Provider.of<Properties>(context, listen: false);
     _controller = TextEditingController();
   }
 
@@ -40,7 +40,7 @@ class _PropertySelectionSearchBoxState
           controller: _controller,
           style: kTitleSmall.copyWith(color: kPrimaryColor),
           decoration: InputDecoration(
-            hintText: 'Search client here ',
+            hintText: 'Search property here ',
             contentPadding: const EdgeInsets.only(top: 6, left: 12),
             hintStyle: kTitleSmall.copyWith(
               color: widget.propertySelectionFocusNode.hasFocus
@@ -79,7 +79,6 @@ class _PropertySelectionSearchBoxState
         },
         itemBuilder: (context, suggestion) {
           return ListTile(
-            leading: const Icon(Icons.perm_identity_sharp),
             title: Text(suggestion.toString()),
           );
         },
@@ -95,7 +94,7 @@ class _PropertySelectionSearchBoxState
             return 'Please select property';
           }
           if (!provider.doesExist(propertySelection)) {
-            return 'Property type does not exist';
+            return 'Property does not exist';
           }
           return null;
         },

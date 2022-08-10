@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../models/property_type.dart';
+import '../../models/property_type.dart';
 
-class PropertyTypeProvider with ChangeNotifier {
+class PropertyTypes with ChangeNotifier {
   List<PropertyType> _propertyTypes = [];
 
   void addPropertyType(PropertyType propertyType) {

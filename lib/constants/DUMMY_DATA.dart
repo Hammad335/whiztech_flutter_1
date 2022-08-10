@@ -1,6 +1,6 @@
 const Map<String, List<String>> cardNames = {
   'Client Creation': ['Client Name', 'Phone', 'Email', 'Address'],
-  'Property Type': ['Name', 'Location'],
+  'Property Type': ['Name ', 'Location'],
   'Create Property': ['Name', 'Size', 'Property Type'],
   'Contract Sign': [
     'Client Selection',

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../models/client.dart';
+import '../../models/client.dart';
 
-class ClientProvider with ChangeNotifier {
+class Clients with ChangeNotifier {
   List<Client> _clients = [];
 
   set populateClients(List<Client> clients) {
