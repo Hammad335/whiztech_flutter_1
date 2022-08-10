@@ -28,7 +28,7 @@ class _DateTimePickerState extends State<DateTimePicker> {
         style: kTitleSmall.copyWith(color: kPrimaryColor),
         decoration: InputDecoration(
           suffixIcon: const Icon(Icons.date_range_sharp, color: kPrimaryColor),
-          hintText: 'Select start date ',
+          hintText: 'Select end date ',
           hintStyle: kTitleSmall.copyWith(
             color: widget.dateTimeFocusNode.hasFocus ? kPrimaryColor : kWhite,
           ),

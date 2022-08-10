@@ -2,6 +2,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:whiztech_flutter_first_project/models/property.dart';
+import 'package:whiztech_flutter_first_project/providers/client_provider.dart';
+import 'package:whiztech_flutter_first_project/providers/contract_sign_provider.dart';
+import 'package:whiztech_flutter_first_project/providers/property_type_provider.dart';
 import 'package:whiztech_flutter_first_project/widgets/form_components/contract_sign_components/date_time_picker.dart';
 import '../constants/DUMMY_DATA.dart';
 import '../constants/constants.dart';
@@ -11,9 +15,11 @@ import '../providers/card_state_provider.dart';
 import '../utils/utils.dart';
 import '../widgets/bottom_sheet_field.dart';
 import '../providers/user.dart' as userProvider;
+import '../widgets/form_components/contract_sign_components/show_contract_sign_fields.dart';
 import '../widgets/form_components/contract_sign_components/amount_textform_field.dart';
+import '../widgets/form_components/create_property_components/show_create_property_fields.dart';
 import '../widgets/form_components/location_textform_field.dart';
-import '../widgets/form_components/size_textform_field.dart';
+import '../widgets/form_components/create_property_components/size_textform_field.dart';
 import '../widgets/form_components/contract_sign_components/client_selection_search_box.dart';
 import '../widgets/form_components/contract_sign_components/property_selection_search_box.dart';
 import '../widgets/form_components/property_type_textform_field.dart';
@@ -39,15 +45,6 @@ class _FormBottomSheetState extends State<FormBottomSheet> {
   String _location = '';
   String _size = '';
   String _propertyType = '';
-  String _clientSelection = '';
-  String _propertySelection = '';
-  String _contractStartDate = '';
-  String _contractEndDate = '';
-  double _amount = 0.0;
-  double _taxVatPercentage = 0.0;
-  double _taxVatAmount = 0.0;
-  double _discountPercentage = 0.0;
-  double _discountAmount = 0.0;
   final _nameFocusNode = FocusNode();
   final _emailFocusNode = FocusNode();
   final _phoneFocusNode = FocusNode();
@@ -55,16 +52,8 @@ class _FormBottomSheetState extends State<FormBottomSheet> {
   final _locationFocusNode = FocusNode();
   final _sizeFocusNode = FocusNode();
   final _propertyTypeFocusNode = FocusNode();
-  final _clientSelectionFocusNode = FocusNode();
-  final _propertySelectionFocusNode = FocusNode();
-  final _startDateFocusNode = FocusNode();
-  final _endDateFocusNode = FocusNode();
-  final _amountFocusNode = FocusNode();
-  final _taxVatPercentFocusNode = FocusNode();
-  final _taxVatAmountFocusNode = FocusNode();
-  final _discountPercentFocusNode = FocusNode();
-  final _discountAmountFocusNode = FocusNode();
   late String selectedCard;
+  late ContractSignProvider _contractSign;
 
   @override
   void initState() {
@@ -83,15 +72,6 @@ class _FormBottomSheetState extends State<FormBottomSheet> {
     _locationFocusNode.dispose();
     _sizeFocusNode.dispose();
     _propertyTypeFocusNode.dispose();
-    _propertySelectionFocusNode.dispose();
-    _startDateFocusNode.dispose();
-    _endDateFocusNode.dispose();
-    _amountFocusNode.dispose();
-    _taxVatPercentFocusNode.dispose();
-    _taxVatAmountFocusNode.dispose();
-    _discountPercentFocusNode.dispose();
-    _discountAmountFocusNode.dispose();
-
     super.dispose();
   }
 
@@ -123,79 +103,11 @@ class _FormBottomSheetState extends State<FormBottomSheet> {
                 ),
               ),
               const SizedBox(height: 40),
-              if (fields!.contains('Client Selection'))
-                BottomSheetField(
-                  title: 'Client Selection : ',
-                  child: ClientSelectionSearchBox(
-                    clientSelectionFocusNode: _clientSelectionFocusNode,
-                    clientSelectionCallBack: _clientSelectionCallBack,
-                  ),
-                ),
-              if (fields.contains('Property Selection'))
-                BottomSheetField(
-                  title: 'Property Selection : ',
-                  child: PropertySelectionSearchBox(
-                    propertySelectionFocusNode: _propertySelectionFocusNode,
-                    propertySelectionCallBack: _propertySelectionCallBack,
-                  ),
-                ),
-              if (fields.contains('Contract Start Date'))
-                BottomSheetField(
-                  title: 'Contract Start Date :',
-                  child: DateTimePicker(
-                      dateTimeFocusNode: _startDateFocusNode,
-                      dateTimeCallBack: _contractStartDateCallBack),
-                ),
-              if (fields.contains('Contract End Date'))
-                BottomSheetField(
-                  title: 'Contract End Date :',
-                  child: DateTimePicker(
-                      dateTimeFocusNode: _endDateFocusNode,
-                      dateTimeCallBack: _contractEndDateCallBack),
-                ),
-              if (fields.contains('Amount'))
-                BottomSheetField(
-                  title: 'Amount :',
-                  child: AmountTextFormField(
-                    amountFocusNode: _amountFocusNode,
-                    amountCallBack: _amountCallBack,
-                  ),
-                ),
-              if (fields.contains('Tax/Vat %'))
-                BottomSheetField(
-                  title: 'Tax/Vat % :',
-                  child: AmountTextFormField(
-                    amountFocusNode: _taxVatPercentFocusNode,
-                    amountCallBack: _taxVatPercentCallBack,
-                    append: 'Enter percentage \'%\'',
-                  ),
-                ),
-              if (fields.contains('Tax/Vat Amount'))
-                BottomSheetField(
-                  title: 'Tax/Vat Amount :',
-                  child: AmountTextFormField(
-                    amountFocusNode: _taxVatAmountFocusNode,
-                    amountCallBack: _taxVatAmountCallBack,
-                  ),
-                ),
-              if (fields.contains('Discount %'))
-                BottomSheetField(
-                  title: 'Discount % :',
-                  child: AmountTextFormField(
-                    amountFocusNode: _discountPercentFocusNode,
-                    amountCallBack: _discountPercentCallBack,
-                    append: 'Enter discount percentage \'%\'',
-                  ),
-                ),
-              if (fields.contains('Discount Amount'))
-                BottomSheetField(
-                  title: 'Discount Amount :',
-                  child: AmountTextFormField(
-                    amountFocusNode: _discountAmountFocusNode,
-                    amountCallBack: _discountAmountCallBack,
-                  ),
-                ),
-              if (fields.contains('Name') || fields.contains('Client Name'))
+              if (selectedCard == cardNames.keys.toList()[2])
+                ShowCreatePropertyFields(), // Create Property
+              if (selectedCard == cardNames.keys.toList()[3])
+                ShowContractSignFields(), // Contract Sign
+              if (fields!.contains('Client Name') || fields.contains('Name'))
                 BottomSheetField(
                   title: '${fields[0]} : ',
                   child: TextFormField(
@@ -232,23 +144,6 @@ class _FormBottomSheetState extends State<FormBottomSheet> {
                       }
                       return null;
                     },
-                  ),
-                ),
-              if (fields.contains('Size'))
-                BottomSheetField(
-                  title: 'Size',
-                  child: SizeTextFormField(
-                    sizeFocusNode: _sizeFocusNode,
-                    propertyTypeFocusNode: _propertyTypeFocusNode,
-                    sizeCallBack: _sizeCallBack,
-                  ),
-                ),
-              if (fields.contains('Property Type'))
-                BottomSheetField(
-                  title: 'Property Type',
-                  child: PropertyTypeTextFormField(
-                    propertyTypeFocusNode: _propertyTypeFocusNode,
-                    propertyTypeCallBack: _propertyTypeCallBack,
                   ),
                 ),
               if (fields.contains('Phone'))
@@ -372,6 +267,9 @@ class _FormBottomSheetState extends State<FormBottomSheet> {
                 child: SaveFormButton(
                   onSavePressed: () async {
                     if (_saveForm()) {
+                      final provider = Provider.of<ContractSignProvider>(
+                          context,
+                          listen: false);
                       try {
                         late Map<String, Object> json;
                         if (selectedCard == fieldNames[0]) {
@@ -381,6 +279,8 @@ class _FormBottomSheetState extends State<FormBottomSheet> {
                             email: _email,
                             address: _address,
                           );
+                          Provider.of<ClientProvider>(context, listen: false)
+                              .addClient(client);
                           // upload client to firestore
                           json = client.toJson();
                         } else if (selectedCard == fieldNames[1]) {
@@ -388,11 +288,22 @@ class _FormBottomSheetState extends State<FormBottomSheet> {
                             name: _name,
                             location: _location,
                           );
+                          Provider.of<PropertyTypeProvider>(context,
+                                  listen: false)
+                              .addPropertyType(propertyType);
                           // upload propertyType to firestore
                           json = propertyType.toJson();
                           // upload propertyType to firebase
                         } else if (selectedCard == fieldNames[2]) {
+                          Property property = Property(
+                            name: _name,
+                            size: _size,
+                            propertyType: _propertyType,
+                          );
+                          json = property.toJson();
                         } else if (selectedCard == fieldNames[3]) {
+                          // contract sign card
+                          json = provider.getContract.toJson();
                         } else if (selectedCard == fieldNames[4]) {
                         } else if (selectedCard == fieldNames[5]) {}
                         await uploadToFirestore(json);
@@ -409,6 +320,10 @@ class _FormBottomSheetState extends State<FormBottomSheet> {
         ),
       ),
     );
+  }
+
+  void contractSignCallBack(ContractSignProvider contractSignProvider) {
+    _contractSign = contractSignProvider;
   }
 
   bool _saveForm() {
@@ -444,41 +359,5 @@ class _FormBottomSheetState extends State<FormBottomSheet> {
 
   void _propertyTypeCallBack(String propertyType) {
     _propertyType = propertyType;
-  }
-
-  void _clientSelectionCallBack(String clientSelection) {
-    _clientSelection = clientSelection;
-  }
-
-  void _propertySelectionCallBack(String propertySelection) {
-    _propertySelection = propertySelection;
-  }
-
-  void _contractStartDateCallBack(String dateTime) {
-    _contractStartDate = dateTime;
-  }
-
-  void _contractEndDateCallBack(String dateTime) {
-    _contractEndDate = dateTime;
-  }
-
-  void _amountCallBack(String amount) {
-    _amount = double.parse(amount);
-  }
-
-  void _taxVatPercentCallBack(String percent) {
-    _taxVatPercentage = double.parse(percent);
-  }
-
-  void _taxVatAmountCallBack(String taxVatAmount) {
-    _taxVatAmount = double.parse(taxVatAmount);
-  }
-
-  void _discountPercentCallBack(String percent) {
-    _discountPercentage = double.parse(percent);
-  }
-
-  void _discountAmountCallBack(String discountAmount) {
-    _discountAmount = double.parse(discountAmount);
   }
 }

@@ -27,7 +27,7 @@ class _SaveFormButtonState extends State<SaveFormButton> {
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(30),
       ),
       child: ElevatedButton(
         onPressed: () {

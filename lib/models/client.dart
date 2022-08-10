@@ -20,7 +20,7 @@ class Client {
     };
   }
 
-  static Client fromJson(Map<String, Object> jsonClient) {
+  static Client fromJson(Map<String, dynamic> jsonClient) {
     return Client(
       name: jsonClient['name'] as String,
       phone: jsonClient['phone'] as String,

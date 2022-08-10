@@ -1,9 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:whiztech_flutter_first_project/constants/constants.dart';
+import 'package:whiztech_flutter_first_project/models/property.dart';
+import 'package:whiztech_flutter_first_project/models/property_type.dart';
 import 'package:whiztech_flutter_first_project/pages/form_bottom_sheet.dart';
 import 'package:whiztech_flutter_first_project/providers/card_state_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:whiztech_flutter_first_project/providers/client_provider.dart';
+import 'package:whiztech_flutter_first_project/providers/property_provider.dart';
+import 'package:whiztech_flutter_first_project/providers/property_type_provider.dart';
+import '../models/client.dart';
 import '../providers/user.dart' as userProvider;
 import '../constants/DUMMY_DATA.dart';
 import '../widgets/form_card.dart';
@@ -23,11 +29,20 @@ class _HomeScreenState extends State<HomeScreen> {
   final _firestore = FirebaseFirestore.instance;
   late String _uId;
   late Future<Map<dynamic, dynamic>> _userFuture;
+  late Future<List<QueryDocumentSnapshot<Map<String, dynamic>>>>
+      _clientDataFuture;
+  late Future<List<QueryDocumentSnapshot<Map<String, dynamic>>>>
+      _propertyTypeFuture;
+  late Future<List<QueryDocumentSnapshot<Map<String, dynamic>>>>
+      _propertiesFuture;
   var bottomSheetController;
 
   @override
   void initState() {
     _userFuture = getUser();
+    _clientDataFuture = getClient();
+    _propertiesFuture = getProperties();
+    _propertyTypeFuture = getProperType();
     super.initState();
   }
 
@@ -37,9 +52,14 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: AppBar(title: const Text('Home'), backgroundColor: kPrimaryColor),
       body: SafeArea(
         child: FutureBuilder(
-          future: _userFuture,
-          builder: (BuildContext context,
-              AsyncSnapshot<Map<dynamic, dynamic>> snapshot) {
+          future: Future.wait([
+            _userFuture,
+            _clientDataFuture,
+            _propertyTypeFuture,
+            _propertiesFuture,
+          ]),
+          builder:
+              (BuildContext context, AsyncSnapshot<List<dynamic>> snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const Center(
                   child: CircularProgressIndicator(color: kPrimaryColor));
@@ -50,34 +70,69 @@ class _HomeScreenState extends State<HomeScreen> {
                       style: kTitleMedium));
             }
             if (snapshot.connectionState == ConnectionState.done) {
+              // set user
+              final user = snapshot.data![0] as Map<String, dynamic>;
               Provider.of<userProvider.User>(context, listen: false).setUser(
                 _uId,
-                snapshot.data!['userName'],
-                snapshot.data!['email'],
+                user['userName'] as String,
+                user['email'] as String,
               );
-              return GridView.count(
-                crossAxisCount: 3,
-                padding: const EdgeInsets.only(top: 40, left: 4, right: 4),
-                crossAxisSpacing: 10,
-                mainAxisSpacing: 10,
-                children: List.generate(9, (index) {
-                  return GestureDetector(
-                    onTap: () {
-                      Provider.of<CardStateProvider>(context, listen: false)
-                          .setSelectedCard(cardNames.keys.toList()[index]);
-                      bottomSheetController = showModalBottomSheet(
-                          context: context,
-                          isScrollControlled: true,
-                          backgroundColor: Colors.transparent,
-                          builder: (context) {
-                            return SingleChildScrollView(
-                              child: FormBottomSheet(index: index),
-                            );
-                          });
-                    },
-                    child: FormCard(cardName: cardNames.keys.toList()[index]),
-                  );
-                }),
+
+              //populate clients data fetched from firestore
+              final clientsList = snapshot.data![1]
+                  as List<QueryDocumentSnapshot<Map<String, dynamic>>>;
+              List<Client> lst1 = <Client>[];
+              for (var type in clientsList) {
+                lst1.add(Client.fromJson(type.data()));
+              }
+              Provider.of<ClientProvider>(context, listen: false)
+                  .populateClients = lst1;
+
+              // populate propertyType data fetched from firestore
+              final propertyTypeList = snapshot.data![2]
+                  as List<QueryDocumentSnapshot<Map<String, dynamic>>>;
+              List<PropertyType> lst2 = [];
+              for (var type in propertyTypeList) {
+                lst2.add(PropertyType.fromJson(type.data()));
+              }
+              Provider.of<PropertyTypeProvider>(context, listen: false)
+                  .populatePropertyTypes = lst2;
+
+              // populate properties data fetched from firestore
+              final propertiesList = snapshot.data![3]
+                  as List<QueryDocumentSnapshot<Map<String, dynamic>>>;
+              List<Property> lst3 = [];
+              for (var type in propertiesList) {
+                lst3.add(Property.fromJson(type.data()));
+              }
+              Provider.of<PropertyProvider>(context, listen: false)
+                  .populateProperties = lst3;
+              return Container(
+                margin: const EdgeInsets.only(top: 110),
+                child: GridView.count(
+                  crossAxisCount: 3,
+                  padding: const EdgeInsets.only(top: 40, left: 4, right: 4),
+                  crossAxisSpacing: 10,
+                  mainAxisSpacing: 10,
+                  children: List.generate(9, (index) {
+                    return GestureDetector(
+                      onTap: () {
+                        Provider.of<CardStateProvider>(context, listen: false)
+                            .setSelectedCard(cardNames.keys.toList()[index]);
+                        bottomSheetController = showModalBottomSheet(
+                            context: context,
+                            isScrollControlled: true,
+                            backgroundColor: Colors.transparent,
+                            builder: (context) {
+                              return SingleChildScrollView(
+                                child: FormBottomSheet(index: index),
+                              );
+                            });
+                      },
+                      child: FormCard(cardName: cardNames.keys.toList()[index]),
+                    );
+                  }),
+                ),
               );
             }
             return const Center(
@@ -93,5 +148,34 @@ class _HomeScreenState extends State<HomeScreen> {
     _uId = user!.uid;
     final response = await _firestore.collection('users').get();
     return response.docs.first.data();
+  }
+
+  Future<List<QueryDocumentSnapshot<Map<String, dynamic>>>> getClient() async {
+    final response = await _firestore
+        .collection('forms')
+        .doc(_uId)
+        .collection('Client Creation')
+        .get();
+    return response.docs;
+  }
+
+  Future<List<QueryDocumentSnapshot<Map<String, dynamic>>>>
+      getProperType() async {
+    final response = await _firestore
+        .collection('forms')
+        .doc(_uId)
+        .collection('Property Type')
+        .get();
+    return response.docs;
+  }
+
+  Future<List<QueryDocumentSnapshot<Map<String, dynamic>>>>
+      getProperties() async {
+    final response = await _firestore
+        .collection('forms')
+        .doc(_uId)
+        .collection('Create Property')
+        .get();
+    return response.docs;
   }
 }

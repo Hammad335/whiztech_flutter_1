@@ -4,6 +4,10 @@ import 'package:whiztech_flutter_first_project/pages/credentials_screen.dart';
 import 'package:whiztech_flutter_first_project/pages/home_screen.dart';
 import 'package:whiztech_flutter_first_project/providers/card_state_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:whiztech_flutter_first_project/providers/client_provider.dart';
+import 'package:whiztech_flutter_first_project/providers/contract_sign_provider.dart';
+import 'package:whiztech_flutter_first_project/providers/property_provider.dart';
+import 'package:whiztech_flutter_first_project/providers/property_type_provider.dart';
 import 'package:whiztech_flutter_first_project/providers/user.dart';
 
 void main() async {
@@ -25,6 +29,18 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (_) => User(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => ContractSignProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => PropertyTypeProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => ClientProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => PropertyProvider(),
         ),
       ],
       child: MaterialApp(

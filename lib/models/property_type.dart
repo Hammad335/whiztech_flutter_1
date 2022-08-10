@@ -14,7 +14,7 @@ class PropertyType {
     };
   }
 
-  static PropertyType fromJson(Map<String, Object> jsonPropertyType) {
+  static PropertyType fromJson(Map<String, dynamic> jsonPropertyType) {
     return PropertyType(
       name: jsonPropertyType['name'] as String,
       location: jsonPropertyType['location'] as String,

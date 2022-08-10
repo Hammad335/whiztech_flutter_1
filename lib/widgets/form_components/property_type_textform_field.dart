@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../../constants/constants.dart';
+import '../../providers/property_type_provider.dart';
 
 class PropertyTypeTextFormField extends StatefulWidget {
   final FocusNode propertyTypeFocusNode;
@@ -17,6 +19,16 @@ class PropertyTypeTextFormField extends StatefulWidget {
 }
 
 class _PropertyTypeTextFormFieldState extends State<PropertyTypeTextFormField> {
+  late PropertyTypeProvider provider;
+  late TextEditingController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    provider = Provider.of<PropertyTypeProvider>(context, listen: false);
+    _controller = TextEditingController();
+  }
+
   @override
   Widget build(BuildContext context) {
     return TextFormField(
