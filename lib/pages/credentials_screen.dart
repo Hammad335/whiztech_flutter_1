@@ -44,6 +44,7 @@ class _CredentialsScreenState extends State<CredentialsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: SafeArea(
         child: Container(
           height: double.infinity,
@@ -52,163 +53,326 @@ class _CredentialsScreenState extends State<CredentialsScreen> {
           ),
           child: Form(
             key: _formKey,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  if (_createAccount)
-                    TextFormField(
-                      style: kTitleSmall.copyWith(color: kPrimaryColor),
-                      decoration: InputDecoration(
-                        hintText: 'Username',
-                        hintStyle: kTitleSmall.copyWith(
-                          color: _userNameFocusNode.hasFocus
-                              ? kPrimaryColor
-                              : kWhite,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SingleChildScrollView(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 30, vertical: 10),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SizedBox(
+                          height: 40,
+                          child: Text(
+                            _createAccount
+                                ? 'Register Your Account'
+                                : 'Login your Account',
+                            style: kTitleLarge.copyWith(
+                              color: kPrimaryColor,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                         ),
-                        enabledBorder: const UnderlineInputBorder(
-                          borderSide: BorderSide(color: kPrimaryColor),
+                        GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              _createAccount = !_createAccount;
+                            });
+                          },
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                _createAccount
+                                    ? 'Already have account ?  '
+                                    : 'New here ?  ',
+                                style: kTitleSmall,
+                              ),
+                              Text(
+                                _createAccount ? 'Login' : 'Register Now',
+                                style:
+                                    kTitleSmall.copyWith(color: kPrimaryColor),
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                      focusNode: _userNameFocusNode,
-                      textInputAction: TextInputAction.next,
-                      keyboardType: TextInputType.name,
-                      onFieldSubmitted: (_) {
-                        FocusScope.of(context).requestFocus(
-                            _createAccount ? _emailFocusNode : null);
-                      },
-                      onSaved: (userName) {
-                        if (userName == null) return;
-                        _username = userName;
-                      },
-                      validator: (userName) {
-                        if (userName == null || userName.isEmpty) {
-                          return 'Please provide username';
-                        } else if (userName.length <= 2) {
-                          return 'Too short, can be b/w 2 to 7 characters';
-                        } else if (userName.length >= 7) {
-                          return 'Too long, can be b/w 2 to 7 characters';
-                        }
-                        return null;
-                      },
-                    ),
-                  const SizedBox(height: 20),
-                  TextFormField(
-                    style: kTitleSmall.copyWith(
-                      color: kPrimaryColor,
-                    ),
-                    decoration: InputDecoration(
-                      hintText: 'Email',
-                      hintStyle: kTitleSmall.copyWith(
-                        color:
-                            _emailFocusNode.hasFocus ? kPrimaryColor : kWhite,
-                      ),
-                      enabledBorder: const UnderlineInputBorder(
-                        borderSide: BorderSide(
-                          color: kPrimaryColor,
+                        const SizedBox(height: 70),
+                        AnimatedContainer(
+                          height: _createAccount ? 74 : 0,
+                          duration: const Duration(milliseconds: 300),
+                          child: AnimatedOpacity(
+                            opacity: _createAccount ? 1 : 0,
+                            duration: const Duration(milliseconds: 300),
+                            child: TextFormField(
+                              style: kTitleSmall.copyWith(color: kPrimaryColor),
+                              decoration: InputDecoration(
+                                hintText: 'Username',
+                                hintStyle: kTitleSmall.copyWith(
+                                  color: _userNameFocusNode.hasFocus
+                                      ? kPrimaryColor
+                                      : Colors.white70,
+                                ),
+                                enabledBorder: const OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: kPrimaryColor,
+                                    width: 2,
+                                  ),
+                                ),
+                                focusedBorder: const OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: kPrimaryColor,
+                                    width: 2,
+                                  ),
+                                ),
+                                disabledBorder: const OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: kPrimaryColor,
+                                    width: 2,
+                                  ),
+                                ),
+                                errorBorder: const OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: kPrimaryColor,
+                                    width: 2,
+                                  ),
+                                ),
+                                focusedErrorBorder: const OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: kPrimaryColor,
+                                    width: 2,
+                                  ),
+                                ),
+                                fillColor: kCredentialTextFieldFillColor,
+                                filled: true,
+                                prefixIcon: const Icon(
+                                  Icons.perm_identity_sharp,
+                                  color: kPrimaryColor,
+                                ),
+                              ),
+                              focusNode: _userNameFocusNode,
+                              textInputAction: TextInputAction.next,
+                              keyboardType: TextInputType.name,
+                              onFieldSubmitted: (_) {
+                                FocusScope.of(context).requestFocus(
+                                    _createAccount ? _emailFocusNode : null);
+                              },
+                              onSaved: (userName) {
+                                if (userName == null) return;
+                                _username = userName;
+                              },
+                              validator: (userName) {
+                                if (userName == null || userName.isEmpty) {
+                                  return 'Please provide username';
+                                } else if (userName.length <= 2) {
+                                  return 'Too short, can be b/w 2 to 7 characters';
+                                } else if (userName.length >= 7) {
+                                  return 'Too long, can be b/w 2 to 7 characters';
+                                }
+                                return null;
+                              },
+                            ),
+                          ),
                         ),
-                      ),
-                    ),
-                    focusNode: _emailFocusNode,
-                    keyboardType: TextInputType.emailAddress,
-                    textInputAction: TextInputAction.next,
-                    onFieldSubmitted: (_) {
-                      FocusScope.of(context).requestFocus(_passwordFocusNode);
-                    },
-                    onSaved: (email) {
-                      if (email == null) return;
-                      _email = email;
-                    },
-                    validator: (email) {
-                      if (email == null || email.isEmpty) {
-                        return 'Please provide email address';
-                      } else if (!email.endsWith('@gmail.com')) {
-                        return 'Badly formatted';
-                      }
-                      return null;
-                    },
-                  ),
-                  const SizedBox(height: 20),
-                  TextFormField(
-                    style: kTitleSmall.copyWith(color: kPrimaryColor),
-                    decoration: InputDecoration(
-                      hintText: 'Password',
-                      hintStyle: kTitleSmall.copyWith(
-                        color: _passwordFocusNode.hasFocus
-                            ? kPrimaryColor
-                            : kWhite,
-                      ),
-                      enabledBorder: const UnderlineInputBorder(
-                        borderSide: BorderSide(
-                          color: kPrimaryColor,
+                        const SizedBox(height: 10),
+                        SizedBox(
+                          height: 74,
+                          child: TextFormField(
+                            style: kTitleSmall.copyWith(
+                              color: kPrimaryColor,
+                            ),
+                            decoration: InputDecoration(
+                              hintText: 'Email',
+                              hintStyle: kTitleSmall.copyWith(
+                                color: _emailFocusNode.hasFocus
+                                    ? kPrimaryColor
+                                    : Colors.white70,
+                              ),
+                              fillColor: kCredentialTextFieldFillColor,
+                              filled: true,
+                              enabledBorder: const OutlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: kPrimaryColor,
+                                  width: 2,
+                                ),
+                              ),
+                              focusedBorder: const OutlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: kPrimaryColor,
+                                  width: 2,
+                                ),
+                              ),
+                              disabledBorder: const OutlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: kPrimaryColor,
+                                  width: 2,
+                                ),
+                              ),
+                              errorBorder: const OutlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: kPrimaryColor,
+                                  width: 2,
+                                ),
+                              ),
+                              focusedErrorBorder: const OutlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: kPrimaryColor,
+                                  width: 2,
+                                ),
+                              ),
+                              prefixIcon: const Icon(
+                                Icons.email_outlined,
+                                color: kPrimaryColor,
+                              ),
+                            ),
+                            focusNode: _emailFocusNode,
+                            keyboardType: TextInputType.emailAddress,
+                            textInputAction: TextInputAction.next,
+                            onFieldSubmitted: (_) {
+                              FocusScope.of(context)
+                                  .requestFocus(_passwordFocusNode);
+                            },
+                            onSaved: (email) {
+                              if (email == null) return;
+                              _email = email;
+                            },
+                            validator: (email) {
+                              print(email);
+                              if (email == null || email.isEmpty) {
+                                return 'Please provide email address';
+                              } else if (!email.endsWith('@gmail.com')) {
+                                return 'Badly formatted';
+                              }
+                              return null;
+                            },
+                          ),
                         ),
-                      ),
-                      suffixIcon: IconButton(
-                        icon: _showPassword
-                            ? const Icon(Icons.visibility)
-                            : const Icon(Icons.visibility_off),
-                        color: kPrimaryColor,
-                        onPressed: () {
-                          setState(() {
-                            _showPassword = !_showPassword;
-                          });
-                        },
-                      ),
+                        const SizedBox(height: 10),
+                        SizedBox(
+                          height: 74,
+                          child: TextFormField(
+                            style: kTitleSmall.copyWith(color: kPrimaryColor),
+                            decoration: InputDecoration(
+                              hintText: 'Password',
+                              hintStyle: kTitleSmall.copyWith(
+                                color: _passwordFocusNode.hasFocus
+                                    ? kPrimaryColor
+                                    : Colors.white70,
+                              ),
+                              enabledBorder: const OutlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: kPrimaryColor,
+                                  width: 2,
+                                ),
+                              ),
+                              focusedBorder: const OutlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: kPrimaryColor,
+                                  width: 2,
+                                ),
+                              ),
+                              disabledBorder: const OutlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: kPrimaryColor,
+                                  width: 2,
+                                ),
+                              ),
+                              errorBorder: const OutlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: kPrimaryColor,
+                                  width: 2,
+                                ),
+                              ),
+                              focusedErrorBorder: const OutlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: kPrimaryColor,
+                                  width: 2,
+                                ),
+                              ),
+                              fillColor: kCredentialTextFieldFillColor,
+                              filled: true,
+                              prefixIcon: const Icon(
+                                Icons.password,
+                                color: kPrimaryColor,
+                              ),
+                              suffixIcon: IconButton(
+                                icon: _showPassword
+                                    ? const Icon(Icons.visibility)
+                                    : const Icon(Icons.visibility_off),
+                                color: kPrimaryColor,
+                                onPressed: () {
+                                  setState(() {
+                                    _showPassword = !_showPassword;
+                                  });
+                                },
+                              ),
+                            ),
+                            obscureText: !_showPassword,
+                            textInputAction: TextInputAction.done,
+                            keyboardType: TextInputType.visiblePassword,
+                            focusNode: _passwordFocusNode,
+                            onSaved: (password) {
+                              print('on saved called');
+                              print(password);
+                              if (password == null) return;
+                              _password = password;
+                            },
+                            validator: (password) {
+                              if (password == null || password.isEmpty) {
+                                return 'Please provide password';
+                              } else if (password.length <= 5) {
+                                return 'Too short, type at least 6 character';
+                              }
+                              return null;
+                            },
+                          ),
+                        ),
+                        const SizedBox(height: 10),
+                        const SizedBox(
+                          width: double.infinity,
+                          child: Text(
+                            'Forgot password ?',
+                            textAlign: TextAlign.end,
+                            style: TextStyle(color: Colors.pink),
+                          ),
+                        ),
+                        const SizedBox(height: 120),
+                        SizedBox(
+                          width: 130,
+                          height: 40,
+                          child: ElevatedButton(
+                            onPressed: () {
+                              print('clicked');
+                              // Navigator.of(context).pushNamed(HomeScreen.routeName);
+                              _createAccount ? _createNewUser() : _loginUser();
+                            },
+                            style: ButtonStyle(
+                                backgroundColor:
+                                    MaterialStateProperty.all(kPrimaryColor),
+                                shape: MaterialStateProperty.all<
+                                    RoundedRectangleBorder>(
+                                  RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10.0),
+                                    side: const BorderSide(color: kWhite),
+                                  ),
+                                )),
+                            child: Text(
+                              _createAccount ? 'Register' : 'Login',
+                              style: const TextStyle(
+                                color: kWhite,
+                                fontSize: 18,
+                                letterSpacing: 1.5,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
-                    obscureText: !_showPassword,
-                    textInputAction: TextInputAction.done,
-                    keyboardType: TextInputType.visiblePassword,
-                    focusNode: _passwordFocusNode,
-                    onSaved: (password) {
-                      if (password == null) return;
-                      _password = password;
-                    },
-                    validator: (password) {
-                      if (password == null || password.isEmpty) {
-                        return 'Please provide password';
-                      } else if (password.length <= 5) {
-                        return 'Too short, type at least 6 character';
-                      }
-                      return null;
-                    },
                   ),
-                  const SizedBox(height: 20),
-                  SizedBox(
-                    width: double.infinity,
-                    child: GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          _createAccount = !_createAccount;
-                        });
-                      },
-                      child: Text(
-                        _createAccount
-                            ? 'Already have account? Login'
-                            : 'Create new account',
-                        textAlign: TextAlign.end,
-                        style: const TextStyle(color: kWhite),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 40),
-                  SizedBox(
-                    width: 120,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        // Navigator.of(context).pushNamed(HomeScreen.routeName);
-                        _createAccount ? _createNewUser() : _loginUser();
-                      },
-                      style: ButtonStyle(
-                        backgroundColor:
-                            MaterialStateProperty.all(kPrimaryColor),
-                      ),
-                      child: Text(_createAccount ? 'Register' : 'Login'),
-                    ),
-                  ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         ),
@@ -217,8 +381,14 @@ class _CredentialsScreenState extends State<CredentialsScreen> {
   }
 
   Future<void> _loginUser() async {
+    print('called');
+    print(_email);
+    print(_password);
     if (_saveForm()) {
+      print('valid');
       try {
+        print(_email);
+        print(_password);
         final user = await _auth
             .signInWithEmailAndPassword(email: _email, password: _password)
             .timeout(const Duration(seconds: 5), onTimeout: () {
@@ -266,11 +436,12 @@ class _CredentialsScreenState extends State<CredentialsScreen> {
   }
 
   bool _saveForm() {
+    print('save form called');
     // setState(() {
     //   _submitted = true;
     // });
     final isValid = _formKey.currentState
-        ?.validate(); // calls onValidate method of each textFormField
+        ?.validate(); // calls onValidate method of each textFo
     if (!isValid!) return false;
     _formKey.currentState?.save(); // calls onSaved method of each textFormField
     return true;

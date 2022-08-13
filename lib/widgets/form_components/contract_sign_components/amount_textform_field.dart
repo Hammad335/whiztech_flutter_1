@@ -32,10 +32,16 @@ class _AmountTextFormFieldState extends State<AmountTextFormField> {
     _controller = TextEditingController();
     _amountDiscProvider =
         Provider.of<ContractSignAmountDiscProvider>(context, listen: false);
-    if (widget.fieldName == 'tax_vat_amount') {
-      _amountDiscProvider.setTaxVatAmountController = _controller;
-    } else if (widget.fieldName == 'discount_amount') {
-      _amountDiscProvider.setDiscountAmountController = _controller;
+    if (!(widget.fieldName == 'amount')) {
+      if (widget.fieldName == 'tax_vat_%') {
+        _amountDiscProvider.setTaxVatPercentController = _controller;
+      } else if (widget.fieldName == 'tax_vat_amount') {
+        _amountDiscProvider.setTaxVatAmountController = _controller;
+      } else if (widget.fieldName == 'discount_%') {
+        _amountDiscProvider.setDiscountPercentController = _controller;
+      } else if (widget.fieldName == 'discount_amount') {
+        _amountDiscProvider.setDiscountAmountController = _controller;
+      }
     }
   }
 
@@ -54,8 +60,17 @@ class _AmountTextFormFieldState extends State<AmountTextFormField> {
           enabledBorder: const UnderlineInputBorder(
             borderSide: BorderSide(color: kPrimaryColor),
           ),
+          focusedBorder: const UnderlineInputBorder(
+            borderSide: BorderSide(color: kPrimaryColor),
+          ),
+          disabledBorder: const UnderlineInputBorder(
+            borderSide: BorderSide(color: kPrimaryColor),
+          ),
+          errorBorder: const UnderlineInputBorder(
+            borderSide: BorderSide(color: kPrimaryColor),
+          ),
         ),
-        readOnly: widget.readOnly ?? false,
+        // readOnly: widget.readOnly ?? false,
         focusNode: widget.amountFocusNode,
         textInputAction: TextInputAction.done,
         keyboardType: TextInputType.number,
@@ -72,22 +87,42 @@ class _AmountTextFormFieldState extends State<AmountTextFormField> {
           if (widget.fieldName == 'amount') {
             if (amount.isNotEmpty && double.tryParse(amount) != null) {
               _amountDiscProvider.amount = double.parse(amount);
-              _amountDiscProvider.getTaxVatAmountController.text =
-                  _amountDiscProvider.getTaxVatAmount.toInt().toString();
-              // _amountDiscProvider.reset();
+              if (!_amountDiscProvider.isTaxVatPercentZero) {
+                _amountDiscProvider.getTaxVatAmountController.text =
+                    _amountDiscProvider.getTaxVatAmount.toInt().toString();
+              }
+              // _amountDiscProvider.getTaxVatPercentController.text =
+              //     _amountDiscProvider.getTaxVatPercent.toInt().toString();
+              if (!_amountDiscProvider.isDiscountPercentZero) {
+                _amountDiscProvider.getDiscountAmountController.text =
+                    _amountDiscProvider.getDiscountAmount.toInt().toString();
+              }
+              // _amountDiscProvider.getDiscountPercentController.text =
+              //     _amountDiscProvider.getDiscountPercent.toInt().toString();
             }
           } else if (widget.fieldName == 'tax_vat_%') {
             if (amount.isNotEmpty && double.tryParse(amount) != null) {
               _amountDiscProvider.taxVatPercentage = double.parse(amount);
               _amountDiscProvider.getTaxVatAmountController.text =
                   _amountDiscProvider.getTaxVatAmount.toInt().toString();
-              // _amountDiscProvider.reset();
+            }
+          } else if (widget.fieldName == 'tax_vat_amount') {
+            if (amount.isNotEmpty && double.tryParse(amount) != null) {
+              _amountDiscProvider.taxVatAmount = double.parse(amount);
+              _amountDiscProvider.getTaxVatPercentController.text =
+                  _amountDiscProvider.getTaxVatPercent.toInt().toString();
             }
           } else if (widget.fieldName == 'discount_%') {
             if (amount.isNotEmpty && double.tryParse(amount) != null) {
               _amountDiscProvider.discountPercentage = double.parse(amount);
               _amountDiscProvider.getDiscountAmountController.text =
                   _amountDiscProvider.getDiscountAmount.toInt().toString();
+            }
+          } else if (widget.fieldName == 'discount_amount') {
+            if (amount.isNotEmpty && double.tryParse(amount) != null) {
+              _amountDiscProvider.discountAmount = double.parse(amount);
+              _amountDiscProvider.getDiscountPercentController.text =
+                  _amountDiscProvider.getDiscountPercent.toInt().toString();
             }
           }
         },

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
-const Color kPrimaryColor = Color(0xffED1B49);
+// const Color kPrimaryColor = Color(0xffED1B49);
+const Color kPrimaryColor = Colors.indigo;
+Color kCredentialTextFieldFillColor = Colors.deepPurpleAccent.withOpacity(0.3);
 const Color kSecondaryColor = Color(0xff212121);
 const Color kOrange = Color(0xffFF7A00);
 const Color kWhite = Colors.white;

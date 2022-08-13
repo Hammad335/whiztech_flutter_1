@@ -109,6 +109,7 @@ class _FormBottomSheetState extends State<FormBottomSheet> {
                   ShowCreatePropertyFields(), // Create Property
                 if (selectedCard == cardNames.keys.toList()[3])
                   ShowContractSignFields(), // Contract Sign
+                // todo: make separate widgets for clientCreation and propertyType
                 if (fields!.contains('Client Name') || fields.contains('Name '))
                   BottomSheetField(
                     title: '${fields[0]} : ',
@@ -352,10 +353,11 @@ class _FormBottomSheetState extends State<FormBottomSheet> {
           .collection(selectedCard)
           .add(json);
     } on FirebaseAuthException catch (e) {
-      Utils.showSnackBar(context, e.message.toString(), 2000);
+      print(e.toString());
+      // Utils.showSnackBar(context, e.message.toString(), 2000);
     } catch (e) {
       String errorMessage = e.toString().split(':').last.trim();
-      Utils.showSnackBar(context, errorMessage, 2000);
+      // Utils.showSnackBar(context, errorMessage, 2000);
     }
   }
 
