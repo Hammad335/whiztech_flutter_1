@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 
 import '../models/FormCardModel.dart';
 
-List<FormCardModel> cards = [
+final List<FormCardModel> cards = [
   FormCardModel(
-      cardName: 'Client Name',
+      cardName: 'Client Creation',
       fieldNames: ['Client Name', 'Phone', 'Email', 'Address'],
       iconData: Icons.person_add_outlined),
   FormCardModel(

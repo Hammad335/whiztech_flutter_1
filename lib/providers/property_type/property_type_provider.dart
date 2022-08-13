@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:whiztech_flutter_first_project/models/property.dart';
 
+import '../../models/property_type.dart';
+
 class PropertyTypeProvider with ChangeNotifier {
   String _name = '';
   String _location = '';
 
-  PropertyTypeProvider get getPropertyType {
-    return this;
+  PropertyType get getPropertyType {
+    return PropertyType(
+      name: _name,
+      location: _location,
+    );
   }
 
   PropertyTypeProvider _signNewContract({
@@ -25,8 +30,8 @@ class PropertyTypeProvider with ChangeNotifier {
     };
   }
 
-  static PropertyTypeProvider fromJson(Map<String, Object> jsonProperty) {
-    return PropertyTypeProvider()._signNewContract(
+  static PropertyType fromJson(Map<String, Object> jsonProperty) {
+    return PropertyType(
       name: jsonProperty['name'] as String,
       location: jsonProperty['location'] as String,
     );

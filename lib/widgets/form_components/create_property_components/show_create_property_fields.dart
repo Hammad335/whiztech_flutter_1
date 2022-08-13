@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:whiztech_flutter_first_project/providers/create_property/property_provider.dart';
-import 'package:whiztech_flutter_first_project/widgets/form_components/create_property_components/name_textform_field.dart';
+import 'package:whiztech_flutter_first_project/utils/form_validator.dart';
+import 'package:whiztech_flutter_first_project/widgets/form_components/reused_fields/custom_textform_field.dart';
 import '../../bottom_sheet_field.dart';
 import 'property_type_textform_field.dart';
-import 'size_textform_field.dart';
 
 class ShowCreatePropertyFields extends StatefulWidget {
   const ShowCreatePropertyFields({Key? key}) : super(key: key);
@@ -40,17 +41,23 @@ class _ShowCreatePropertyFieldsState extends State<ShowCreatePropertyFields> {
       children: [
         BottomSheetField(
             title: 'Name: ',
-            child: NameTextFormField(
-              nameCallBack: _nameCallBack,
-              sizeFocusNode: _sizeFocusNode,
-              nameFocusNode: _nameFocusNode,
+            child: CustomTextFormField(
+              currentFieldCallBack: _nameCallBack,
+              nextFocusNode: _sizeFocusNode,
+              hintText: 'Enter name here',
+              firstFocusNode: _nameFocusNode,
+              keyboardType: TextInputType.name,
+              validationCallBack: FormValidator.validateName,
             )),
         BottomSheetField(
           title: 'Size: ',
-          child: SizeTextFormField(
-            sizeFocusNode: _sizeFocusNode,
-            propertyTypeFocusNode: _propertyTypeFocusNode,
-            sizeCallBack: _sizeCallBack,
+          child: CustomTextFormField(
+            firstFocusNode: _sizeFocusNode,
+            nextFocusNode: _propertyTypeFocusNode,
+            hintText: 'Enter size',
+            keyboardType: TextInputType.text,
+            currentFieldCallBack: _sizeCallBack,
+            validationCallBack: FormValidator.validateSize,
           ),
         ),
         BottomSheetField(

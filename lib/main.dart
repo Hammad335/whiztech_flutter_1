@@ -4,6 +4,7 @@ import 'package:whiztech_flutter_first_project/pages/credentials_screen.dart';
 import 'package:whiztech_flutter_first_project/pages/home_screen.dart';
 import 'package:whiztech_flutter_first_project/providers/card_state_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:whiztech_flutter_first_project/providers/client_creation/client_provider.dart';
 import 'package:whiztech_flutter_first_project/providers/client_creation/clients.dart';
 import 'package:whiztech_flutter_first_project/providers/contract_sign/contract_sign_provider.dart';
 import 'package:whiztech_flutter_first_project/providers/contract_sign_amount_disc_provider.dart';
@@ -44,6 +45,9 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (_) => Clients(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => ClientProvider(),
         ),
         ChangeNotifierProvider(
           create: (_) => Properties(),

@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:whiztech_flutter_first_project/models/property.dart';
 
 class PropertyProvider with ChangeNotifier {
   String _name = '';
   String _size = '';
   String _propertyType = '';
 
-  PropertyProvider get getProperty {
-    return this;
+  Property get getProperty {
+    return Property(name: _name, size: _size, propertyType: _propertyType);
   }
 
   PropertyProvider _signNewContract({
