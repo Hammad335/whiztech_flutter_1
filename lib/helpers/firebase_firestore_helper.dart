@@ -7,6 +7,19 @@ import '../providers/user.dart' as userProvider;
 class FirebaseFirestoreHelper {
   final _auth = FirebaseAuth.instance;
   final _firestore = FirebaseFirestore.instance;
+  final User? _user = FirebaseAuth.instance.currentUser;
+
+  Future<void> uploadFormData(
+      Map<String, Object> json, String selectedCard) async {
+    await _firestore
+        .collection('forms')
+        .doc(_user!.uid)
+        .collection(selectedCard)
+        .add(json)
+        .timeout(const Duration(seconds: 5), onTimeout: () {
+      throw Exception('Slow internet connection, try again later');
+    });
+  }
 
   Future<void> loginUser(String email, String password) async {
     await _auth

@@ -21,8 +21,8 @@ class _SaveFormButtonState extends State<SaveFormButton> {
         gradient: LinearGradient(
           colors: [
             kPrimaryColor,
-            Colors.redAccent,
-            kPrimaryColor.withOpacity(0.5),
+            Colors.greenAccent.withOpacity(0.4),
+            kPrimaryColor,
           ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,

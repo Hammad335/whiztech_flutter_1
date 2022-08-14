@@ -6,15 +6,18 @@ final List<FormCardModel> cards = [
   FormCardModel(
       cardName: 'Client Creation',
       fieldNames: ['Client Name', 'Phone', 'Email', 'Address'],
-      iconData: Icons.person_add_outlined),
+      iconData: Icons.person_add_outlined,
+      color: Colors.pinkAccent),
   FormCardModel(
       cardName: 'Property Type',
       fieldNames: ['Name ', 'Location'],
-      iconData: Icons.account_balance_sharp),
+      iconData: Icons.account_balance_sharp,
+      color: Colors.deepOrangeAccent),
   FormCardModel(
       cardName: 'Create Property',
       fieldNames: ['Name', 'Size', 'Property Type'],
-      iconData: Icons.add_business),
+      iconData: Icons.add_business,
+      color: Colors.purpleAccent),
   FormCardModel(
       cardName: 'Contract Sign',
       fieldNames: [
@@ -28,17 +31,33 @@ final List<FormCardModel> cards = [
         'Discount %',
         'Discount Amount',
       ],
-      iconData: Icons.payments),
+      iconData: Icons.payments,
+      color: Colors.lightBlueAccent),
   FormCardModel(
-      cardName: 'Contract History', fieldNames: [], iconData: Icons.history),
+      cardName: 'Contract History',
+      fieldNames: [],
+      iconData: Icons.history,
+      color: Colors.orangeAccent),
   FormCardModel(
-      cardName: 'Receive Amount', fieldNames: [], iconData: Icons.attach_money),
+      cardName: 'Receive Amount',
+      fieldNames: [],
+      iconData: Icons.attach_money,
+      color: Colors.redAccent),
   FormCardModel(
-      cardName: 'Ledger Balance', fieldNames: [], iconData: Icons.add),
+      cardName: 'Ledger Balance',
+      fieldNames: [],
+      iconData: Icons.add,
+      color: Colors.orange),
   FormCardModel(
-      cardName: 'Coming Soon', fieldNames: [], iconData: Icons.upcoming),
+      cardName: 'Coming Soon',
+      fieldNames: [],
+      iconData: Icons.upcoming,
+      color: Colors.black54),
   FormCardModel(
-      cardName: 'Coming Soon', fieldNames: [], iconData: Icons.upcoming),
+      cardName: 'Coming Soon',
+      fieldNames: [],
+      iconData: Icons.upcoming,
+      color: Colors.black54),
 ];
 const Map<String, List<String>> cardNames = {
   'Client Creation': ['Client Name', 'Phone', 'Email', 'Address'],

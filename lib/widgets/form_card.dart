@@ -14,7 +14,7 @@ class FormCard extends StatelessWidget {
       height: 50,
       padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
       decoration: BoxDecoration(
-        color: Colors.grey,
+        color: cardModel.color,
         borderRadius: BorderRadius.circular(10),
       ),
       child: Column(
@@ -23,12 +23,12 @@ class FormCard extends StatelessWidget {
         children: [
           Icon(
             cardModel.iconData,
-            size: 30,
+            size: 35,
             color: kPrimaryColor,
           ),
           Text(
             cardModel.cardName,
-            style: kTitleMedium.copyWith(fontSize: 16),
+            style: kTitleMedium.copyWith(fontSize: 14),
             textAlign: TextAlign.center,
           ),
         ],

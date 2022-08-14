@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:provider/provider.dart';
-
 import '../../../constants/constants.dart';
 import '../../../providers/property_type/property_types.dart';
 
