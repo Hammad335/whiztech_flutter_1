@@ -8,6 +8,10 @@ class CustomTextFormField extends StatefulWidget {
   final TextInputType keyboardType;
   final String hintText;
   Function currentFieldCallBack;
+  bool? readOnly;
+  TextEditingController? currentController;
+  TextEditingController? contractAmountController;
+  TextEditingController? balanceAmountController;
   Function(String?) validationCallBack;
 
   CustomTextFormField({
@@ -16,6 +20,10 @@ class CustomTextFormField extends StatefulWidget {
     required this.keyboardType,
     required this.hintText,
     required this.currentFieldCallBack,
+    this.readOnly,
+    this.currentController,
+    this.contractAmountController,
+    this.balanceAmountController,
     required this.validationCallBack,
   });
 
@@ -27,16 +35,30 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      controller: widget.currentController,
       style: kTitleSmall.copyWith(color: kPrimaryColor),
       decoration: TextFormFieldDecoration.formFieldDecoration(
         hintText: widget.hintText,
         focusNode: widget.firstFocusNode,
       ),
       focusNode: widget.firstFocusNode,
+      readOnly: widget.readOnly ?? false,
       textInputAction: widget.nextFocusNode == null
           ? TextInputAction.done
           : TextInputAction.next,
       keyboardType: widget.keyboardType,
+      onChanged: (amount) {
+        if (widget.contractAmountController != null) {
+          if (amount.isEmpty || double.tryParse(amount) == null) {
+            widget.balanceAmountController!.clear();
+            return;
+          }
+          final balanceAmount =
+              double.parse(widget.contractAmountController!.text) -
+                  double.parse(amount);
+          widget.balanceAmountController!.text = balanceAmount.toString();
+        }
+      },
       onFieldSubmitted: (_) {
         if (widget.nextFocusNode != null) {
           FocusScope.of(context).requestFocus(widget.nextFocusNode);

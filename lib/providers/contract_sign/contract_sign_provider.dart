@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../models/contract.dart';
+
 class ContractSignProvider with ChangeNotifier {
   String _clientSelection = '';
   String _propertySelection = '';
@@ -11,8 +13,18 @@ class ContractSignProvider with ChangeNotifier {
   double _discountPercentage = 0.0;
   double _discountAmount = 0.0;
 
-  ContractSignProvider get getContract {
-    return this;
+  Contract get getContract {
+    return Contract(
+      clientSelection: _clientSelection,
+      propertySelection: _propertySelection,
+      contractStartDate: _contractStartDate,
+      contractEndDate: _contractEndDate,
+      amount: _amount,
+      taxVatPercentage: _taxVatPercentage,
+      taxVatAmount: _taxVatAmount,
+      discountPercentage: _discountPercentage,
+      discountAmount: _discountAmount,
+    );
   }
 
   ContractSignProvider _signNewContract({

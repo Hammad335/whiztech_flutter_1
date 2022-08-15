@@ -40,7 +40,13 @@ final List<FormCardModel> cards = [
       color: Colors.orangeAccent),
   FormCardModel(
       cardName: 'Receive Amount',
-      fieldNames: [],
+      fieldNames: [
+        'Search Contract',
+        'Contract Date',
+        'Contract Amount',
+        'Receive Amount',
+        'Balance Amount',
+      ],
       iconData: Icons.attach_money,
       color: Colors.redAccent),
   FormCardModel(
@@ -75,7 +81,13 @@ const Map<String, List<String>> cardNames = {
     'Discount Amount',
   ],
   'Contract History': [],
-  'Receive Amount': [],
+  'Receive Amount': [
+    'Search Contract',
+    'Contract Date',
+    'Contract Amount',
+    'Receive Amount',
+    'Balance Amount',
+  ],
   'Ledger Balance': [],
   'Coming Soon': [],
   'Coming Soon.': [],

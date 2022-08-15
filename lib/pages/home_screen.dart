@@ -11,10 +11,14 @@ import 'package:whiztech_flutter_first_project/providers/contract_sign_amount_di
 import 'package:whiztech_flutter_first_project/providers/create_property/properties.dart';
 import 'package:whiztech_flutter_first_project/providers/property_type/property_types.dart';
 import '../models/client.dart';
+import '../models/contract.dart';
+import '../providers/contract_sign/contracts.dart';
 import '../providers/user.dart' as userProvider;
 import '../constants/DUMMY_DATA.dart';
 import '../widgets/form_card.dart';
 import 'package:provider/provider.dart';
+
+import 'contract_history_page.dart';
 
 class HomeScreen extends StatefulWidget {
   static const routeName = 'home-screen';
@@ -36,7 +40,8 @@ class _HomeScreenState extends State<HomeScreen> {
       _propertyTypeFuture;
   late Future<List<QueryDocumentSnapshot<Map<String, dynamic>>>>
       _propertiesFuture;
-  var bottomSheetController;
+  late Future<List<QueryDocumentSnapshot<Map<String, dynamic>>>>
+      _contractHistoryFuture;
 
   @override
   void initState() {
@@ -44,6 +49,7 @@ class _HomeScreenState extends State<HomeScreen> {
     _clientDataFuture = getClient();
     _propertiesFuture = getProperties();
     _propertyTypeFuture = getProperType();
+    _contractHistoryFuture = getHistory();
     super.initState();
   }
 
@@ -58,6 +64,7 @@ class _HomeScreenState extends State<HomeScreen> {
             _clientDataFuture,
             _propertyTypeFuture,
             _propertiesFuture,
+            _contractHistoryFuture,
           ]),
           builder:
               (BuildContext context, AsyncSnapshot<List<dynamic>> snapshot) {
@@ -108,6 +115,16 @@ class _HomeScreenState extends State<HomeScreen> {
               }
               Provider.of<Properties>(context, listen: false)
                   .populateProperties = lst3;
+
+              // populate contract history data fetched from firestore
+              final contractsList = snapshot.data![4]
+                  as List<QueryDocumentSnapshot<Map<String, dynamic>>>;
+              List<Contract> lst4 = [];
+              for (var type in contractsList) {
+                lst4.add(Contract.fromJson(type.data()));
+              }
+              Provider.of<Contracts>(context, listen: false).populateContracts =
+                  lst4;
               return Container(
                 margin: const EdgeInsets.only(top: 110),
                 child: GridView.count(
@@ -120,7 +137,12 @@ class _HomeScreenState extends State<HomeScreen> {
                       onTap: () {
                         Provider.of<CardStateProvider>(context, listen: false)
                             .setSelectedCard(cardNames.keys.toList()[index]);
-                        bottomSheetController = showModalBottomSheet(
+                        if (index == 4) {
+                          Navigator.of(context)
+                              .pushNamed(ContractHistoryPage.routeName);
+                          return;
+                        }
+                        showModalBottomSheet(
                             context: context,
                             isScrollControlled: true,
                             backgroundColor: Colors.transparent,
@@ -176,6 +198,15 @@ class _HomeScreenState extends State<HomeScreen> {
         .collection('forms')
         .doc(_uId)
         .collection('Create Property')
+        .get();
+    return response.docs;
+  }
+
+  Future<List<QueryDocumentSnapshot<Map<String, dynamic>>>> getHistory() async {
+    final response = await _firestore
+        .collection('forms')
+        .doc(_uId)
+        .collection('Contract Sign')
         .get();
     return response.docs;
   }

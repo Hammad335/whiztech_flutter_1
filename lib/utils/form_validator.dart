@@ -1,3 +1,8 @@
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import '../providers/contract_sign/contracts.dart';
+
 class FormValidator {
   static String? validateName(String? name) {
     if (name == null || name.isEmpty) {
@@ -43,6 +48,34 @@ class FormValidator {
   static String? validateAddress(String? address) {
     if (address == null || address.isEmpty) {
       return 'Please provide address';
+    }
+    return null;
+  }
+
+  static String? validateContractClient(String? client, BuildContext context) {
+    final provider = Provider.of<Contracts>(context, listen: false);
+    if (client == null || client.isEmpty) {
+      return 'Please select any contract';
+    }
+    if (!provider.doesExist(client)) {
+      return 'client does not exist';
+    }
+    return null;
+  }
+
+  static String? validateContractDate(String? date) {
+    return null;
+  }
+
+  static String? doNotValidate(String? data) {
+    return null;
+  }
+
+  static String? validateReceivedAmount(String? amount) {
+    if (amount == null || amount.isEmpty) {
+      return 'Please enter received amount';
+    } else if (double.tryParse(amount) == null) {
+      return 'Enter valid amount';
     }
     return null;
   }
