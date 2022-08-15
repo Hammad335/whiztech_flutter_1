@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:whiztech_flutter_first_project/widgets/form_components/receive_amount_components/contract_selection_search_box.dart';
 import 'package:whiztech_flutter_first_project/widgets/form_components/reused_fields/custom_textform_field.dart';
-
-import '../../providers/receive_amount/received_amount_provider.dart';
+import '../../providers/received_amounts/received_amount_provider.dart';
 import '../../utils/form_validator.dart';
 import '../bottom_sheet_field.dart';
 
@@ -25,8 +24,6 @@ class _ShowReceiveAmountFieldsState extends State<ShowReceiveAmountFields> {
       TextEditingController();
   final TextEditingController _contractDateController = TextEditingController();
   final TextEditingController _balanceAmountController =
-      TextEditingController();
-  final TextEditingController _receiveAmountController =
       TextEditingController();
   late ReceivedAmountProvider provider;
 
@@ -57,6 +54,7 @@ class _ShowReceiveAmountFieldsState extends State<ShowReceiveAmountFields> {
             validationCallBack: FormValidator.validateContractClient,
             keyboardType: TextInputType.name,
             currentFieldCallBack: _contractCallBack,
+            contractIdCallBack: _contractIdCallBack,
             hintText: 'Search contract client here',
             contractAmountController: _contractAmountController,
             contractDateController: _contractDateController,
@@ -93,17 +91,15 @@ class _ShowReceiveAmountFieldsState extends State<ShowReceiveAmountFields> {
             currentFieldCallBack: _receiveAmountCallBack,
             keyboardType: TextInputType.number,
             firstFocusNode: _receiveAmountFocusNode,
-            currentController: _receiveAmountController,
-            contractAmountController: _contractAmountController,
-            balanceAmountController: _balanceAmountController,
             validationCallBack: FormValidator.validateReceivedAmount,
+            onReceivedAmountChangeCallBack: _onReceivedAmountChangeCallBack,
           ),
         ),
         BottomSheetField(
           title: 'Balance Amount: ',
           child: CustomTextFormField(
             hintText: 'Balance amount (auto generated)',
-            currentFieldCallBack: _receiveAmountCallBack,
+            currentFieldCallBack: _balanceAmountCallBack,
             keyboardType: TextInputType.number,
             firstFocusNode: _balanceAmountFocusNode,
             readOnly: true,
@@ -115,8 +111,24 @@ class _ShowReceiveAmountFieldsState extends State<ShowReceiveAmountFields> {
     );
   }
 
+  void _onReceivedAmountChangeCallBack(String? amount) {
+    // change balance amount on receive amount change
+    if (amount == null || amount.isEmpty || double.tryParse(amount) == null) {
+      _balanceAmountController.clear();
+      return;
+    }
+    if (_contractAmountController.text.isEmpty) return;
+    final balanceAmount =
+        double.parse(_contractAmountController.text) - double.parse(amount);
+    _balanceAmountController.text = balanceAmount.toStringAsFixed(1);
+  }
+
   void _contractCallBack(String contract) {
     provider.contract = contract;
+  }
+
+  void _contractIdCallBack(String id) {
+    provider.contractId = id;
   }
 
   void _contractDateCallBack(String contractDate) {
@@ -124,14 +136,14 @@ class _ShowReceiveAmountFieldsState extends State<ShowReceiveAmountFields> {
   }
 
   void _contractAmountCallBack(String contractAmount) {
-    provider.contractDate = contractAmount;
+    provider.contractAmount = double.parse(contractAmount);
   }
 
-  void _receiveAmountCallBack(double receiveAmount) {
-    provider.receiveAmount = receiveAmount;
+  void _receiveAmountCallBack(String receiveAmount) {
+    provider.receiveAmount = double.parse(receiveAmount);
   }
 
-  void _balanceAmountCallBack(double balanceAmount) {
-    provider.balanceAmount = balanceAmount;
+  void _balanceAmountCallBack(String balanceAmount) {
+    provider.balanceAmount = double.parse(balanceAmount);
   }
 }

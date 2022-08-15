@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:whiztech_flutter_first_project/constants/constants.dart';
 import 'package:whiztech_flutter_first_project/models/property.dart';
 import 'package:whiztech_flutter_first_project/models/property_type.dart';
+import 'package:whiztech_flutter_first_project/models/received_amount.dart';
 import 'package:whiztech_flutter_first_project/pages/form_bottom_sheet.dart';
 import 'package:whiztech_flutter_first_project/providers/card_state_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -13,6 +14,7 @@ import 'package:whiztech_flutter_first_project/providers/property_type/property_
 import '../models/client.dart';
 import '../models/contract.dart';
 import '../providers/contract_sign/contracts.dart';
+import '../providers/received_amounts/received_amounts.dart';
 import '../providers/user.dart' as userProvider;
 import '../constants/DUMMY_DATA.dart';
 import '../widgets/form_card.dart';
@@ -42,6 +44,8 @@ class _HomeScreenState extends State<HomeScreen> {
       _propertiesFuture;
   late Future<List<QueryDocumentSnapshot<Map<String, dynamic>>>>
       _contractHistoryFuture;
+  late Future<List<QueryDocumentSnapshot<Map<String, dynamic>>>>
+      _receiveAmountFuture;
 
   @override
   void initState() {
@@ -50,6 +54,7 @@ class _HomeScreenState extends State<HomeScreen> {
     _propertiesFuture = getProperties();
     _propertyTypeFuture = getProperType();
     _contractHistoryFuture = getHistory();
+    _receiveAmountFuture = getReceivedAmounts();
     super.initState();
   }
 
@@ -65,6 +70,7 @@ class _HomeScreenState extends State<HomeScreen> {
             _propertyTypeFuture,
             _propertiesFuture,
             _contractHistoryFuture,
+            _receiveAmountFuture,
           ]),
           builder:
               (BuildContext context, AsyncSnapshot<List<dynamic>> snapshot) {
@@ -116,15 +122,26 @@ class _HomeScreenState extends State<HomeScreen> {
               Provider.of<Properties>(context, listen: false)
                   .populateProperties = lst3;
 
-              // populate contract history data fetched from firestore
+              // populate contract signs data fetched from firestore
               final contractsList = snapshot.data![4]
                   as List<QueryDocumentSnapshot<Map<String, dynamic>>>;
               List<Contract> lst4 = [];
               for (var type in contractsList) {
-                lst4.add(Contract.fromJson(type.data()));
+                final json = type.data()..putIfAbsent('id', () => type.id);
+                lst4.add(Contract.fromJson(json));
               }
               Provider.of<Contracts>(context, listen: false).populateContracts =
                   lst4;
+              // populate received amounts data fetched from firestore
+              final receivedAmountsList = snapshot.data![5]
+                  as List<QueryDocumentSnapshot<Map<String, dynamic>>>;
+              List<ReceivedAmount> lst5 = [];
+              for (var type in receivedAmountsList) {
+                final json = type.data()..putIfAbsent('id', () => type.id);
+                lst5.add(ReceivedAmount.fromJson(json));
+              }
+              Provider.of<ReceivedAmounts>(context, listen: false)
+                  .populateReceivedAmounts = lst5;
               return Container(
                 margin: const EdgeInsets.only(top: 110),
                 child: GridView.count(
@@ -207,6 +224,16 @@ class _HomeScreenState extends State<HomeScreen> {
         .collection('forms')
         .doc(_uId)
         .collection('Contract Sign')
+        .get();
+    return response.docs;
+  }
+
+  Future<List<QueryDocumentSnapshot<Map<String, dynamic>>>>
+      getReceivedAmounts() async {
+    final response = await _firestore
+        .collection('forms')
+        .doc(_uId)
+        .collection('Receive Amount')
         .get();
     return response.docs;
   }

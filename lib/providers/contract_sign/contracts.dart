@@ -13,13 +13,20 @@ class Contracts with ChangeNotifier {
     _contracts = contracts;
   }
 
-  void addContract(Contract contract) {
-    _contracts.add(contract);
+  void addContract(Contract contract, String id) {
+    final json = contract.toJson()..putIfAbsent('id', () => id);
+    _contracts.add(Contract.fromJson(json));
   }
 
   Contract getSingleContract(String pattern) {
     return _contracts
         .firstWhere((element) => element.clientSelection == pattern);
+  }
+
+  String? getContractIdByName(String pattern) {
+    return _contracts
+        .firstWhere((element) => element.clientSelection == pattern)
+        .id;
   }
 
   List<String> getContracts(String pattern) {

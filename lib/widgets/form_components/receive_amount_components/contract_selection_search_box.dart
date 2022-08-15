@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:provider/provider.dart';
+import 'package:whiztech_flutter_first_project/providers/received_amounts/received_amounts.dart';
 import '../../../constants/constants.dart';
 import '../../../providers/contract_sign/contracts.dart';
 
 class ContractSelectionSearchBox extends StatefulWidget {
   final FocusNode firstFocusNode;
   Function currentFieldCallBack;
+  Function contractIdCallBack;
   String hintText;
   final TextInputType keyboardType;
   final TextEditingController? contractDateController;
@@ -16,6 +18,7 @@ class ContractSelectionSearchBox extends StatefulWidget {
   ContractSelectionSearchBox({
     required this.firstFocusNode,
     required this.currentFieldCallBack,
+    required this.contractIdCallBack,
     required this.hintText,
     required this.keyboardType,
     this.contractDateController,
@@ -30,13 +33,15 @@ class ContractSelectionSearchBox extends StatefulWidget {
 
 class _ContractSelectionSearchBoxState
     extends State<ContractSelectionSearchBox> {
-  late Contracts provider;
+  late Contracts _contracts;
+  late ReceivedAmounts _receivedAmounts;
   late TextEditingController _controller;
 
   @override
   void initState() {
     super.initState();
-    provider = Provider.of<Contracts>(context, listen: false);
+    _contracts = Provider.of<Contracts>(context, listen: false);
+    _receivedAmounts = Provider.of<ReceivedAmounts>(context, listen: false);
     _controller = TextEditingController();
   }
 
@@ -80,7 +85,7 @@ class _ContractSelectionSearchBoxState
         keyboardType: widget.keyboardType,
       ),
       suggestionsCallback: (pattern) async {
-        return provider.getContracts(pattern);
+        return _contracts.getContracts(pattern);
       },
       itemBuilder: (context, suggestion) {
         return ListTile(
@@ -92,16 +97,29 @@ class _ContractSelectionSearchBoxState
         if (widget.contractAmountController != null &&
             widget.contractDateController != null) {
           final selectedContract =
-              provider.getSingleContract(suggestion.trim());
-          final netAmount = selectedContract.amount -
+              _contracts.getSingleContract(suggestion.trim());
+          final receivedAmount =
+              _receivedAmounts.getByContractId(selectedContract.id!);
+          double receivedDouble = 0.0;
+          if (receivedAmount != null) {
+            print(selectedContract.amount -
+                selectedContract.taxVatAmount -
+                selectedContract.discountAmount);
+            receivedDouble = receivedAmount.receiveAmount;
+          }
+          double netAmount = selectedContract.amount -
               selectedContract.taxVatAmount -
-              selectedContract.discountAmount;
-          widget.contractAmountController!.text = netAmount.toString();
+              selectedContract.discountAmount -
+              receivedDouble;
+          widget.contractAmountController!.text = netAmount.toStringAsFixed(1);
           widget.contractDateController!.text =
               selectedContract.contractStartDate;
         }
       },
-      onSaved: (value) => widget.currentFieldCallBack(value),
+      onSaved: (value) {
+        widget.currentFieldCallBack(value);
+        widget.contractIdCallBack(_contracts.getContractIdByName(value!));
+      },
       validator: (value) => widget.validationCallBack(value, context),
     );
   }

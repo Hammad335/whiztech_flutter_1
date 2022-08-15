@@ -13,9 +13,10 @@ import 'package:whiztech_flutter_first_project/providers/create_property/propert
 import 'package:whiztech_flutter_first_project/providers/property_type/property_type_provider.dart';
 import 'package:whiztech_flutter_first_project/providers/create_property/property_provider.dart';
 import 'package:whiztech_flutter_first_project/providers/property_type/property_types.dart';
+import 'package:whiztech_flutter_first_project/providers/received_amounts/received_amounts.dart';
 import 'package:whiztech_flutter_first_project/providers/user.dart';
 import 'pages/contract_history_page.dart';
-import 'providers/receive_amount/received_amount_provider.dart';
+import 'providers/received_amounts/received_amount_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -66,6 +67,9 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (_) => ReceivedAmountProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => ReceivedAmounts(),
         ),
       ],
       child: MaterialApp(

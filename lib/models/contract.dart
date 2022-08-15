@@ -1,4 +1,5 @@
 class Contract {
+  String? id;
   String clientSelection;
   String propertySelection;
   String contractStartDate;
@@ -10,6 +11,7 @@ class Contract {
   double discountAmount;
 
   Contract({
+    this.id,
     required this.clientSelection,
     required this.propertySelection,
     required this.contractStartDate,
@@ -26,7 +28,7 @@ class Contract {
       'client selection': clientSelection,
       'property selection': propertySelection,
       'contract start date': contractStartDate,
-      'contract end Date': contractEndDate,
+      'contract end date': contractEndDate,
       'amount': amount,
       'tax/vat percentage': taxVatPercentage,
       'tax/vat amount': taxVatAmount,
@@ -37,6 +39,7 @@ class Contract {
 
   static Contract fromJson(Map<String, dynamic> jsonContract) {
     return Contract(
+      id: jsonContract['id'] as String,
       clientSelection: jsonContract['client selection'] as String,
       propertySelection: jsonContract['property selection'] as String,
       contractStartDate: jsonContract['contract start date'] as String,

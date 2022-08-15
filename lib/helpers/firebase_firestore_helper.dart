@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:whiztech_flutter_first_project/providers/received_amounts/received_amounts.dart';
 import '../providers/user.dart' as userProvider;
 
 class FirebaseFirestoreHelper {
@@ -9,9 +10,30 @@ class FirebaseFirestoreHelper {
   final _firestore = FirebaseFirestore.instance;
   final User? _user = FirebaseAuth.instance.currentUser;
 
-  Future<void> uploadFormData(
-      Map<String, Object> json, String selectedCard) async {
+  Future<void> updateReceivedAmount(
+      Map<String, Object> json,
+      String selectedCard,
+      BuildContext context,
+      String alreadyReceivedAmountId) async {
+    final receivedAmount = Provider.of<ReceivedAmounts>(context, listen: false)
+        .getByContractId(json['contract id'] as String);
+    print(alreadyReceivedAmountId);
+    print(receivedAmount!.id);
+    // if (receivedAmount != null) {
     await _firestore
+        .collection('forms')
+        .doc(_user!.uid)
+        .collection(selectedCard)
+        .doc(alreadyReceivedAmountId)
+        .update(json)
+        .timeout(const Duration(seconds: 5), onTimeout: () {
+      throw Exception('Slow internet connection, try again later');
+    });
+  }
+
+  Future<DocumentReference<Map<String, dynamic>>> uploadFormData(
+      Map<String, Object> json, String selectedCard) async {
+    return await _firestore
         .collection('forms')
         .doc(_user!.uid)
         .collection(selectedCard)
