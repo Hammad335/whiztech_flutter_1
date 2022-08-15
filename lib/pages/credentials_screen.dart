@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:whiztech_flutter_first_project/pages/home_screen.dart';
 import '../constants/constants.dart';
 import '../utils/utils.dart';
-import '../utils/credentials_text_form_field_decoration.dart';
+import '../utils/text_form_field_decoration.dart';
 import '../helpers/firebase_firestore_helper.dart';
 import '../widgets/register_login_button.dart';
 
@@ -46,9 +46,8 @@ class _CredentialsScreenState extends State<CredentialsScreen> {
         child: Container(
           height: double.infinity,
           width: double.infinity,
-          decoration: BoxDecoration(
-            color: kCredentialsBackgroundColor,
-            image: const DecorationImage(
+          decoration: const BoxDecoration(
+            image: DecorationImage(
               image: AssetImage('assets/images/credentials_background.jpg'),
               fit: BoxFit.fill,
             ),
@@ -73,10 +72,7 @@ class _CredentialsScreenState extends State<CredentialsScreen> {
                           _createAccount
                               ? 'Register Your Account'
                               : 'Login your Account',
-                          style: kTitleLarge.copyWith(
-                            color: kPrimaryColor,
-                            fontWeight: FontWeight.bold,
-                          ),
+                          style: kTitleLargeBold,
                         ),
                       ),
                       GestureDetector(
@@ -110,8 +106,8 @@ class _CredentialsScreenState extends State<CredentialsScreen> {
                           duration: const Duration(milliseconds: 300),
                           child: TextFormField(
                             style: kTitleSmall.copyWith(color: kPrimaryColor),
-                            decoration:
-                                CredentialsTextFormFieldDecoration.decoration(
+                            decoration: TextFormFieldDecoration
+                                .credentialsTextFormFieldDecoration(
                               hintText: 'Username',
                               focusNode: _userNameFocusNode,
                               iconData: Icons.perm_identity_sharp,
@@ -128,7 +124,7 @@ class _CredentialsScreenState extends State<CredentialsScreen> {
                               if (!_createAccount) {
                                 return null;
                               } else {
-                                Utils.userNameValidation(userName);
+                                return Utils.userNameValidation(userName);
                               }
                             },
                           ),
@@ -141,8 +137,8 @@ class _CredentialsScreenState extends State<CredentialsScreen> {
                           style: kTitleSmall.copyWith(
                             color: kPrimaryColor,
                           ),
-                          decoration:
-                              CredentialsTextFormFieldDecoration.decoration(
+                          decoration: TextFormFieldDecoration
+                              .credentialsTextFormFieldDecoration(
                             hintText: 'Email',
                             focusNode: _emailFocusNode,
                             iconData: Icons.email_outlined,
@@ -163,8 +159,8 @@ class _CredentialsScreenState extends State<CredentialsScreen> {
                         height: 74,
                         child: TextFormField(
                           style: kTitleSmall.copyWith(color: kPrimaryColor),
-                          decoration:
-                              CredentialsTextFormFieldDecoration.decoration(
+                          decoration: TextFormFieldDecoration
+                              .credentialsTextFormFieldDecoration(
                             hintText: 'Password',
                             focusNode: _passwordFocusNode,
                             iconData: Icons.password,

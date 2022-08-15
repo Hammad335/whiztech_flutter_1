@@ -17,6 +17,8 @@ class _SaveFormButtonState extends State<SaveFormButton> {
   Widget build(BuildContext context) {
     return Container(
       height: 38,
+      width: 120,
+      margin: const EdgeInsets.only(bottom: 10),
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [

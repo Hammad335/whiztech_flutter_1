@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 import '../constants/constants.dart';
 
-class CredentialsTextFormFieldDecoration {
-  static InputDecoration decoration({
+class TextFormFieldDecoration {
+  static InputDecoration credentialsTextFormFieldDecoration({
     required String hintText,
     required FocusNode focusNode,
     required IconData iconData,
@@ -12,8 +12,8 @@ class CredentialsTextFormFieldDecoration {
     return InputDecoration(
       hintText: hintText,
       hintStyle: kTitleSmall.copyWith(
-        color: focusNode.hasFocus ? kPrimaryColor : Colors.white70,
-      ),
+          // color: focusNode.hasFocus ? kPrimaryColor : Colors.white70,
+          ),
       enabledBorder: const OutlineInputBorder(
         borderSide: BorderSide(
           color: kPrimaryColor,
@@ -51,6 +51,30 @@ class CredentialsTextFormFieldDecoration {
         color: kPrimaryColor,
       ),
       suffixIcon: suffixIconButton,
+    );
+  }
+
+  static InputDecoration formFieldDecoration({
+    required String hintText,
+    required FocusNode focusNode,
+  }) {
+    return InputDecoration(
+      hintText: hintText,
+      hintStyle: kTitleSmall.copyWith(
+          // color: focusNode.hasFocus ? kPrimaryColor : kWhite,
+          ),
+      enabledBorder: const UnderlineInputBorder(
+        borderSide: BorderSide(color: kPrimaryColor),
+      ),
+      focusedBorder: const UnderlineInputBorder(
+        borderSide: BorderSide(color: kPrimaryColor),
+      ),
+      disabledBorder: const UnderlineInputBorder(
+        borderSide: BorderSide(color: kPrimaryColor),
+      ),
+      errorBorder: const UnderlineInputBorder(
+        borderSide: BorderSide(color: kPrimaryColor),
+      ),
     );
   }
 }

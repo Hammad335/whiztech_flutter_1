@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:whiztech_flutter_first_project/utils/text_form_field_decoration.dart';
 import '../../../constants/constants.dart';
 import '../../../providers/contract_sign_amount_disc_provider.dart';
 
 class AmountTextFormField extends StatefulWidget {
   final FocusNode amountFocusNode;
   Function amountCallBack;
-  String? append;
+  String hint;
   bool? readOnly;
   String fieldName;
 
   AmountTextFormField({
-    this.append,
+    required this.hint,
     required this.amountFocusNode,
     required this.amountCallBack,
     required this.fieldName,
@@ -32,6 +33,42 @@ class _AmountTextFormFieldState extends State<AmountTextFormField> {
     _controller = TextEditingController();
     _amountDiscProvider =
         Provider.of<ContractSignAmountDiscProvider>(context, listen: false);
+    _setControllerToProvider();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.only(left: 6),
+      child: TextFormField(
+        controller: _controller,
+        style: kTitleSmall.copyWith(color: kPrimaryColor),
+        decoration: TextFormFieldDecoration.formFieldDecoration(
+          hintText: widget.hint,
+          focusNode: widget.amountFocusNode,
+        ),
+        focusNode: widget.amountFocusNode,
+        textInputAction: TextInputAction.done,
+        keyboardType: TextInputType.number,
+        onSaved: (amount) {
+          widget.amountCallBack(amount);
+        },
+        onChanged: (amount) {
+          _amountDiscProvider.onChanged(widget.fieldName, amount);
+        },
+        validator: (amount) {
+          if (amount == null || amount.isEmpty) {
+            return 'Please provide number';
+          } else if (double.tryParse(amount) == null) {
+            return 'Please provide valid number';
+          }
+          return null;
+        },
+      ),
+    );
+  }
+
+  void _setControllerToProvider() {
     if (!(widget.fieldName == 'amount')) {
       if (widget.fieldName == 'tax_vat_%') {
         _amountDiscProvider.setTaxVatPercentController = _controller;
@@ -43,98 +80,5 @@ class _AmountTextFormFieldState extends State<AmountTextFormField> {
         _amountDiscProvider.setDiscountAmountController = _controller;
       }
     }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.only(left: 6),
-      child: TextFormField(
-        controller: _controller,
-        style: kTitleSmall.copyWith(color: kPrimaryColor),
-        decoration: InputDecoration(
-          hintText: widget.append ?? 'Enter price',
-          hintStyle: kTitleSmall.copyWith(
-            color: widget.amountFocusNode.hasFocus ? kPrimaryColor : kWhite,
-          ),
-          enabledBorder: const UnderlineInputBorder(
-            borderSide: BorderSide(color: kPrimaryColor),
-          ),
-          focusedBorder: const UnderlineInputBorder(
-            borderSide: BorderSide(color: kPrimaryColor),
-          ),
-          disabledBorder: const UnderlineInputBorder(
-            borderSide: BorderSide(color: kPrimaryColor),
-          ),
-          errorBorder: const UnderlineInputBorder(
-            borderSide: BorderSide(color: kPrimaryColor),
-          ),
-        ),
-        // readOnly: widget.readOnly ?? false,
-        focusNode: widget.amountFocusNode,
-        textInputAction: TextInputAction.done,
-        keyboardType: TextInputType.number,
-        onSaved: (amount) {
-          if (amount == null) return;
-          if (widget.fieldName == 'tax_vat_amount') {
-            _amountDiscProvider.reset();
-          } else if (widget.fieldName == 'discount_amount') {
-            _amountDiscProvider.reset();
-          }
-          widget.amountCallBack(amount);
-        },
-        onChanged: (amount) {
-          if (widget.fieldName == 'amount') {
-            if (amount.isNotEmpty && double.tryParse(amount) != null) {
-              _amountDiscProvider.amount = double.parse(amount);
-              if (!_amountDiscProvider.isTaxVatPercentZero) {
-                _amountDiscProvider.getTaxVatAmountController.text =
-                    _amountDiscProvider.getTaxVatAmount.toInt().toString();
-              }
-              // _amountDiscProvider.getTaxVatPercentController.text =
-              //     _amountDiscProvider.getTaxVatPercent.toInt().toString();
-              if (!_amountDiscProvider.isDiscountPercentZero) {
-                _amountDiscProvider.getDiscountAmountController.text =
-                    _amountDiscProvider.getDiscountAmount.toInt().toString();
-              }
-              // _amountDiscProvider.getDiscountPercentController.text =
-              //     _amountDiscProvider.getDiscountPercent.toInt().toString();
-            }
-          } else if (widget.fieldName == 'tax_vat_%') {
-            if (amount.isNotEmpty && double.tryParse(amount) != null) {
-              _amountDiscProvider.taxVatPercentage = double.parse(amount);
-              _amountDiscProvider.getTaxVatAmountController.text =
-                  _amountDiscProvider.getTaxVatAmount.toInt().toString();
-            }
-          } else if (widget.fieldName == 'tax_vat_amount') {
-            if (amount.isNotEmpty && double.tryParse(amount) != null) {
-              _amountDiscProvider.taxVatAmount = double.parse(amount);
-              _amountDiscProvider.getTaxVatPercentController.text =
-                  _amountDiscProvider.getTaxVatPercent.toInt().toString();
-            }
-          } else if (widget.fieldName == 'discount_%') {
-            if (amount.isNotEmpty && double.tryParse(amount) != null) {
-              _amountDiscProvider.discountPercentage = double.parse(amount);
-              _amountDiscProvider.getDiscountAmountController.text =
-                  _amountDiscProvider.getDiscountAmount.toInt().toString();
-            }
-          } else if (widget.fieldName == 'discount_amount') {
-            if (amount.isNotEmpty && double.tryParse(amount) != null) {
-              _amountDiscProvider.discountAmount = double.parse(amount);
-              _amountDiscProvider.getDiscountPercentController.text =
-                  _amountDiscProvider.getDiscountPercent.toInt().toString();
-            }
-          }
-        },
-        validator: (amount) {
-          if (amount == null || amount.isEmpty) {
-            return 'Please provide price';
-          } else if (double.tryParse(amount) == null) {
-            return 'Please provide valid number';
-          }
-          return null;
-        },
-      ),
-    );
   }
 }

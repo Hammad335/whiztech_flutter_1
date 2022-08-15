@@ -13,10 +13,7 @@ import '../providers/card_state_provider.dart';
 import '../providers/create_property/properties.dart';
 import '../providers/property_type/property_type_provider.dart';
 import '../utils/utils.dart';
-import '../widgets/form_components/contract_sign_components/show_contract_sign_fields.dart';
-import '../widgets/form_components/create_property_components/show_create_property_fields.dart';
-import '../widgets/form_components/show_property_type_fields.dart';
-import '../widgets/form_components/show_client_creation_fields.dart';
+import '../widgets/ShowSelectedCardFields.dart';
 import '../widgets/save_form_button.dart';
 
 class FormBottomSheet extends StatefulWidget {
@@ -74,26 +71,13 @@ class _FormBottomSheetState extends State<FormBottomSheet> {
                 const SizedBox(height: 20),
                 Text(
                   cards[widget.index].cardName,
-                  style: kTitleMedium.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: kPrimaryColor,
-                    letterSpacing: 1,
-                  ),
+                  style: kBottomSheetHeading,
                 ),
                 const SizedBox(height: 40),
-                if (selectedCard == cards[0].cardName)
-                  const ShowClientCreationFields(),
-                if (selectedCard == cards[1].cardName)
-                  const ShowPropertyTypeFields(),
-                if (selectedCard == cards[2].cardName)
-                  const ShowCreatePropertyFields(), // Create Property
-                if (selectedCard == cards[3].cardName)
-                  ShowContractSignFields(), // Contract Sign
+                ShowSelectedCardFields(selectedCardIndex: widget.index),
                 const SizedBox(height: 30),
                 Container(
-                  width: 120,
                   padding: MediaQuery.of(context).viewInsets,
-                  margin: const EdgeInsets.only(bottom: 10),
                   child: SaveFormButton(
                     onSavePressed: () async {
                       if (Utils.saveForm(_form)) {

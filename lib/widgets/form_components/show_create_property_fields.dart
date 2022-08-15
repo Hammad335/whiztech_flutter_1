@@ -4,8 +4,8 @@ import 'package:provider/provider.dart';
 import 'package:whiztech_flutter_first_project/providers/create_property/property_provider.dart';
 import 'package:whiztech_flutter_first_project/utils/form_validator.dart';
 import 'package:whiztech_flutter_first_project/widgets/form_components/reused_fields/custom_textform_field.dart';
-import '../../bottom_sheet_field.dart';
-import 'property_type_textform_field.dart';
+import '../bottom_sheet_field.dart';
+import 'create_property_components/property_type_textform_field.dart';
 
 class ShowCreatePropertyFields extends StatefulWidget {
   const ShowCreatePropertyFields({Key? key}) : super(key: key);

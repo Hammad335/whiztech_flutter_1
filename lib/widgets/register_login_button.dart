@@ -22,14 +22,11 @@ class _RegisterLoginButtonState extends State<RegisterLoginButton> {
       height: 40,
       child: ElevatedButton(
         onPressed: () {
-          print('called');
           setState(() {
-            print('true');
             showSpinner = true;
           });
           widget.onPressed().then((_) {
             setState(() {
-              print('then');
               showSpinner = false;
             });
           });

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:whiztech_flutter_first_project/utils/text_form_field_decoration.dart';
 import '../../../constants/constants.dart';
 
 class CustomTextFormField extends StatefulWidget {
@@ -27,18 +28,14 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
   Widget build(BuildContext context) {
     return TextFormField(
       style: kTitleSmall.copyWith(color: kPrimaryColor),
-      decoration: InputDecoration(
+      decoration: TextFormFieldDecoration.formFieldDecoration(
         hintText: widget.hintText,
-        hintStyle: kTitleSmall.copyWith(
-          color: widget.firstFocusNode.hasFocus ? kPrimaryColor : kWhite,
-        ),
-        enabledBorder: const UnderlineInputBorder(
-          borderSide: BorderSide(color: kPrimaryColor),
-        ),
+        focusNode: widget.firstFocusNode,
       ),
       focusNode: widget.firstFocusNode,
-      textInputAction:
-          widget.nextFocusNode == null ? null : TextInputAction.next,
+      textInputAction: widget.nextFocusNode == null
+          ? TextInputAction.done
+          : TextInputAction.next,
       keyboardType: widget.keyboardType,
       onFieldSubmitted: (_) {
         if (widget.nextFocusNode != null) {
