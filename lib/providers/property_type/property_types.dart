@@ -27,7 +27,7 @@ class PropertyTypes with ChangeNotifier {
     bool doesExist = false;
     try {
       _propertyTypes.firstWhere((element) {
-        if (element.name.toLowerCase() == type.toLowerCase()) {
+        if (element.name.trim().toLowerCase() == type.trim().toLowerCase()) {
           return doesExist = true;
         } else {
           return doesExist = false;

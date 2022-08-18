@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:whiztech_flutter_first_project/models/received_amount.dart';
 import 'package:collection/collection.dart';
-import '../../models/property_type.dart';
 
 class ReceivedAmounts with ChangeNotifier {
   List<ReceivedAmount> _receivedAmounts = [];
@@ -12,7 +11,6 @@ class ReceivedAmounts with ChangeNotifier {
   }
 
   void updateReceivedAmount(ReceivedAmount receivedAmount) {
-    print(receivedAmount.receiveAmount);
     _receivedAmounts
         .firstWhere(
             (element) => element.contractId == receivedAmount.contractId)

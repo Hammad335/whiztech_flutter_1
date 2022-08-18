@@ -46,9 +46,10 @@ class ProcessAndUploadFormData {
         // contract sign card
         Provider.of<ContractSignAmountDiscProvider>(context, listen: false)
             .reset();
-        final contract =
-            Provider.of<ContractSignProvider>(context, listen: false)
-                .getContract;
+        final provider =
+            Provider.of<ContractSignProvider>(context, listen: false);
+        provider.setNetAmount();
+        final contract = provider.getContract;
         final response = await firebaseFirestoreHelper.uploadFormData(
             contract.toJson(), selectedCard);
         addToCurrentContracts(context, contract, response.id);
@@ -64,7 +65,6 @@ class ProcessAndUploadFormData {
                 .getByContractId(receivedAmount.contractId);
         if (alreadyReceivedAmount != null) {
           receivedAmount.receiveAmount += alreadyReceivedAmount.receiveAmount;
-          print(receivedAmount.receiveAmount);
           await firebaseFirestoreHelper.updateReceivedAmount(
               receivedAmount.toJson(),
               selectedCard,
@@ -77,8 +77,6 @@ class ProcessAndUploadFormData {
             receivedAmount.toJson(), selectedCard);
         addToCurrentReceivedAmount(context, receivedAmount, response.id);
         return;
-        // Provider.of<ReceivedAmount>(context, listen: false).addReceivedAmount(receivedAmount);
-        json = receivedAmount.toJson();
       }
       await firebaseFirestoreHelper.uploadFormData(json, selectedCard);
     } catch (exception) {

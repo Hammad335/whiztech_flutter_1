@@ -107,10 +107,13 @@ class _CredentialsScreenState extends State<CredentialsScreen> {
                           child: TextFormField(
                             style: kTitleSmall.copyWith(color: kPrimaryColor),
                             decoration: TextFormFieldDecoration
-                                .credentialsTextFormFieldDecoration(
+                                .outlinedFormFieldDecoration(
                               hintText: 'Username',
                               focusNode: _userNameFocusNode,
-                              iconData: Icons.perm_identity_sharp,
+                              prefixIconIconData: Icons.perm_identity_sharp,
+                              borderWidth: 2,
+                              filled: true,
+                              filledColor: kCredentialTextFieldFillColor,
                             ),
                             focusNode: _userNameFocusNode,
                             textInputAction: TextInputAction.next,
@@ -138,10 +141,13 @@ class _CredentialsScreenState extends State<CredentialsScreen> {
                             color: kPrimaryColor,
                           ),
                           decoration: TextFormFieldDecoration
-                              .credentialsTextFormFieldDecoration(
+                              .outlinedFormFieldDecoration(
                             hintText: 'Email',
                             focusNode: _emailFocusNode,
-                            iconData: Icons.email_outlined,
+                            prefixIconIconData: Icons.email_outlined,
+                            borderWidth: 2,
+                            filled: true,
+                            filledColor: kCredentialTextFieldFillColor,
                           ),
                           focusNode: _emailFocusNode,
                           keyboardType: TextInputType.emailAddress,
@@ -160,10 +166,13 @@ class _CredentialsScreenState extends State<CredentialsScreen> {
                         child: TextFormField(
                           style: kTitleSmall.copyWith(color: kPrimaryColor),
                           decoration: TextFormFieldDecoration
-                              .credentialsTextFormFieldDecoration(
+                              .outlinedFormFieldDecoration(
                             hintText: 'Password',
                             focusNode: _passwordFocusNode,
-                            iconData: Icons.password,
+                            prefixIconIconData: Icons.password,
+                            borderWidth: 2,
+                            filled: true,
+                            filledColor: kCredentialTextFieldFillColor,
                             suffixIconButton: IconButton(
                               icon: _showPassword
                                   ? const Icon(Icons.visibility)

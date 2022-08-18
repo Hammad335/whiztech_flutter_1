@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:whiztech_flutter_first_project/models/property.dart';
+import 'package:collection/collection.dart';
 
 class Properties with ChangeNotifier {
   List<Property> _properties = [];
@@ -24,17 +25,13 @@ class Properties with ChangeNotifier {
 
   bool doesExist(String property) {
     bool doesExist = false;
-    try {
-      _properties.firstWhere((element) {
-        if (element.name.toLowerCase() == property.toLowerCase()) {
-          return doesExist = true;
-        } else {
-          return doesExist = false;
-        }
-      });
-    } catch (e) {
-      doesExist = false;
-    }
+    _properties.firstWhereOrNull((element) {
+      if (element.name.trim().toLowerCase() == property.trim().toLowerCase()) {
+        return doesExist = true;
+      } else {
+        return doesExist = false;
+      }
+    });
     return doesExist;
   }
 }

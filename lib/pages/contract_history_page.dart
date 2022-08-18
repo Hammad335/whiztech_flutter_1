@@ -15,7 +15,9 @@ class ContractHistoryPage extends StatelessWidget {
         Provider.of<Contracts>(context, listen: false).getAllContracts;
     return Scaffold(
       appBar: AppBar(
-          title: const Text('Orders History'), backgroundColor: kPrimaryColor),
+        title: const Text('Orders History'),
+        backgroundColor: kPrimaryColor,
+      ),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(

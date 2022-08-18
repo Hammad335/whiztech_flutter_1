@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:provider/provider.dart';
 import 'package:whiztech_flutter_first_project/providers/client_creation/clients.dart';
+import 'package:whiztech_flutter_first_project/utils/text_form_field_decoration.dart';
 import '../../../constants/constants.dart';
 
 class ClientSelectionSearchBox extends StatefulWidget {
@@ -38,37 +39,10 @@ class _ClientSelectionSearchBoxState extends State<ClientSelectionSearchBox> {
         textFieldConfiguration: TextFieldConfiguration(
           controller: _controller,
           style: kTitleSmall.copyWith(color: kPrimaryColor),
-          decoration: InputDecoration(
-            hintText: 'Search client here ',
-            alignLabelWithHint: true,
-            contentPadding: const EdgeInsets.only(top: 6, left: 12),
-            hintStyle: kTitleSmall.copyWith(
-              color: widget.clientSelectionFocusNode.hasFocus
-                  ? kPrimaryColor
-                  : kWhite,
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10.0),
-              borderSide: const BorderSide(
-                color: Colors.blue,
-              ),
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10),
-              borderSide: const BorderSide(color: kPrimaryColor),
-            ),
-            focusedErrorBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10.0),
-              borderSide: const BorderSide(
-                color: Colors.blue,
-              ),
-            ),
-            errorBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10.0),
-              borderSide: const BorderSide(
-                color: kPrimaryColor,
-              ),
-            ),
+          decoration: TextFormFieldDecoration.outlinedFormFieldDecoration(
+            hintText: 'Search client here',
+            focusNode: widget.clientSelectionFocusNode,
+            borderRadius: 10.0,
           ),
           focusNode: widget.clientSelectionFocusNode,
           textInputAction: TextInputAction.done,

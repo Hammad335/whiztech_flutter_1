@@ -12,6 +12,7 @@ class ContractSignProvider with ChangeNotifier {
   double _taxVatAmount = 0.0;
   double _discountPercentage = 0.0;
   double _discountAmount = 0.0;
+  double _netAmount = 0.0;
 
   Contract get getContract {
     return Contract(
@@ -24,57 +25,7 @@ class ContractSignProvider with ChangeNotifier {
       taxVatAmount: _taxVatAmount,
       discountPercentage: _discountPercentage,
       discountAmount: _discountAmount,
-    );
-  }
-
-  ContractSignProvider _signNewContract({
-    required String clientSelection,
-    required String propertySelection,
-    required String contractStartDate,
-    required String contractEndDate,
-    required double amount,
-    required double taxVatPercentage,
-    required double taxVatAmount,
-    required double discountPercentage,
-    required double discountAmount,
-  }) {
-    _clientSelection = clientSelection;
-    _propertySelection = propertySelection;
-    _contractStartDate = contractStartDate;
-    _contractEndDate = contractEndDate;
-    _amount = amount;
-    _taxVatPercentage = taxVatPercentage;
-    _taxVatAmount = taxVatAmount;
-    _discountPercentage = discountPercentage;
-    _discountAmount = discountAmount;
-    return this;
-  }
-
-  Map<String, Object> toJson() {
-    return {
-      'client selection': _clientSelection,
-      'property selection': _propertySelection,
-      'contract start date': _contractStartDate,
-      'contract end date': _contractEndDate,
-      'amount': _amount,
-      'tax/vat percentage': _taxVatPercentage,
-      'tax/vat amount': _taxVatAmount,
-      'discount percentage': _discountPercentage,
-      'discount amount': _discountAmount,
-    };
-  }
-
-  static ContractSignProvider? fromJson(Map<String, Object> jsonContract) {
-    return ContractSignProvider()._signNewContract(
-      clientSelection: jsonContract['client selection'] as String,
-      propertySelection: jsonContract['property selection'] as String,
-      contractStartDate: jsonContract['contract start date'] as String,
-      contractEndDate: jsonContract['contract end date'] as String,
-      amount: jsonContract['amount'] as double,
-      taxVatPercentage: jsonContract['tax/vat percentage'] as double,
-      taxVatAmount: jsonContract['tax/vat amount'] as double,
-      discountPercentage: jsonContract['discount percentage'] as double,
-      discountAmount: jsonContract['discount amount'] as double,
+      netAmount: _netAmount,
     );
   }
 
@@ -112,5 +63,9 @@ class ContractSignProvider with ChangeNotifier {
 
   set discountAmount(double value) {
     _discountAmount = value;
+  }
+
+  void setNetAmount() {
+    _netAmount = _amount - _taxVatAmount - _discountAmount;
   }
 }

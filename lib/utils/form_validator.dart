@@ -1,14 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:whiztech_flutter_first_project/providers/create_property/properties.dart';
 
+import '../providers/client_creation/clients.dart';
 import '../providers/contract_sign/contracts.dart';
+import '../providers/property_type/property_types.dart';
 
 class FormValidator {
-  static String? validateName(String? name) {
+  static String? validateClientName(String? name, BuildContext context) {
+    final clients = Provider.of<Clients>(context, listen: false);
     if (name == null || name.isEmpty) {
       return 'Please provide name';
     } else if (name.length >= 21) {
       return 'Too long';
+    } else if (clients.doesExist(name)) {
+      return 'Client already exists';
+    }
+    return null;
+  }
+
+  static String? validatePropertyName(String? name, BuildContext context) {
+    final properties = Provider.of<Properties>(context, listen: false);
+    if (name == null || name.isEmpty) {
+      return 'Please provide name';
+    } else if (name.length >= 21) {
+      return 'Too long';
+    } else if (properties.doesExist(name)) {
+      return 'Property already exists';
     }
     return null;
   }
@@ -31,7 +49,7 @@ class FormValidator {
     if (phone == null || phone.isEmpty) {
       return 'Please provide phone';
     } else if (phone.length < 11 || phone.length > 11) {
-      return 'Invalid Number';
+      return 'Invalid Number, e.g. +92...';
     }
     return null;
   }
@@ -63,7 +81,15 @@ class FormValidator {
     return null;
   }
 
-  static String? validateContractDate(String? date) {
+  static String? validatePropertyType(
+      String? propertyType, BuildContext context) {
+    final provider = Provider.of<PropertyTypes>(context, listen: false);
+    if (propertyType == null || propertyType.isEmpty) {
+      return 'Please select property type';
+    }
+    if (provider.doesExist(propertyType)) {
+      return 'Property type already exist';
+    }
     return null;
   }
 

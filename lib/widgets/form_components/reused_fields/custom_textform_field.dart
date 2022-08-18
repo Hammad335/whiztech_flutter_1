@@ -8,9 +8,10 @@ class CustomTextFormField extends StatefulWidget {
   final TextInputType keyboardType;
   final String hintText;
   Function currentFieldCallBack;
+  Function validationCallBack;
   bool? readOnly;
   TextEditingController? currentController;
-  Function(String?) validationCallBack;
+  bool? shouldPassContext;
   Function(String?)? onReceivedAmountChangeCallBack;
 
   CustomTextFormField({
@@ -20,6 +21,7 @@ class CustomTextFormField extends StatefulWidget {
     required this.hintText,
     required this.currentFieldCallBack,
     this.readOnly,
+    this.shouldPassContext,
     this.currentController,
     required this.validationCallBack,
     this.onReceivedAmountChangeCallBack,
@@ -35,7 +37,7 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
     return TextFormField(
       controller: widget.currentController,
       style: kTitleSmall.copyWith(color: kPrimaryColor),
-      decoration: TextFormFieldDecoration.formFieldDecoration(
+      decoration: TextFormFieldDecoration.underlinedFormFieldDecoration(
         hintText: widget.hintText,
         focusNode: widget.firstFocusNode,
       ),
@@ -52,7 +54,9 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
         }
       },
       onSaved: (value) => widget.currentFieldCallBack(value),
-      validator: (String? value) => widget.validationCallBack(value),
+      validator: (String? value) => widget.shouldPassContext == null
+          ? widget.validationCallBack(value)
+          : widget.validationCallBack(value, context),
     );
   }
 }

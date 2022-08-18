@@ -47,7 +47,8 @@ class _ShowClientCreationFieldsState extends State<ShowClientCreationFields> {
             currentFieldCallBack: _nameCallBack,
             hintText: 'Enter client name here',
             keyboardType: TextInputType.name,
-            validationCallBack: FormValidator.validateName,
+            validationCallBack: FormValidator.validateClientName,
+            shouldPassContext: true,
           ),
         ),
         BottomSheetField(
@@ -95,10 +96,10 @@ class _ShowClientCreationFieldsState extends State<ShowClientCreationFields> {
   }
 
   void _emailCallBack(String email) {
-    provider.phone = email;
+    provider.email = email;
   }
 
   void _addressCallBack(String address) {
-    provider.phone = address;
+    provider.address = address;
   }
 }

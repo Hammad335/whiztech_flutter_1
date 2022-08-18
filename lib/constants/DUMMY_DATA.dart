@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 import '../models/FormCardModel.dart';
 
+final List<String> menuOptions = ['Profile', 'Settings', 'LogOut'];
+
 final List<FormCardModel> cards = [
   FormCardModel(
       cardName: 'Client Creation',
@@ -60,9 +62,9 @@ final List<FormCardModel> cards = [
       iconData: Icons.upcoming,
       color: Colors.black54),
   FormCardModel(
-      cardName: 'Coming Soon',
+      cardName: 'About Us',
       fieldNames: [],
-      iconData: Icons.upcoming,
+      iconData: Icons.info_outline,
       color: Colors.black54),
 ];
 const Map<String, List<String>> cardNames = {
@@ -90,5 +92,5 @@ const Map<String, List<String>> cardNames = {
   ],
   'Ledger Balance': [],
   'Coming Soon': [],
-  'Coming Soon.': [],
+  'About Us': [],
 };

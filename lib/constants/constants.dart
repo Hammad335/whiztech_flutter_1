@@ -11,11 +11,26 @@ const TextStyle kTitleSmall = TextStyle(
   fontWeight: FontWeight.normal,
   color: Colors.white,
 );
+const TextStyle kTitleSmallBlack = TextStyle(
+  fontSize: 15,
+  fontWeight: FontWeight.normal,
+  color: kBlack,
+);
+const TextStyle kTitleSmallPrimary = TextStyle(
+  fontSize: 17,
+  fontWeight: FontWeight.bold,
+  color: kPrimaryColor,
+);
 
 const TextStyle kTitleMedium = TextStyle(
   fontSize: 19,
   fontWeight: FontWeight.normal,
   color: Colors.white,
+);
+const TextStyle kTitleMediumBold = TextStyle(
+  fontSize: 19,
+  fontWeight: FontWeight.bold,
+  color: kBlack,
 );
 const TextStyle kBottomSheetHeading = TextStyle(
   fontSize: 19,
@@ -30,3 +45,7 @@ const TextStyle kTitleLarge = TextStyle(
 );
 
 TextStyle kTitleLargeBold = kTitleLarge.copyWith(fontWeight: FontWeight.bold);
+
+TextStyle kTitleExtraLarge = kTitleLargeBold.copyWith(fontSize: 25);
+TextStyle kTitleMediumBlack =
+    kTitleMedium.copyWith(color: kBlack, fontWeight: FontWeight.w500);

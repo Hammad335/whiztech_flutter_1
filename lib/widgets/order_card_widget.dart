@@ -28,15 +28,33 @@ class OrderCardWidget extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Container(width: double.infinity),
-                Text('Client Name',
-                    style: kTitleMedium.copyWith(
-                      color: kBlack,
-                      fontSize: 15,
-                      fontWeight: FontWeight.bold,
-                    )),
-                Text(
-                  contract.clientSelection,
-                  style: kTitleSmall.copyWith(color: Colors.grey),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('Client Name',
+                            style: kTitleMedium.copyWith(
+                              color: kBlack,
+                              fontSize: 15,
+                              fontWeight: FontWeight.bold,
+                            )),
+                        Text(
+                          contract.clientSelection,
+                          style: kTitleSmall.copyWith(color: Colors.grey),
+                        ),
+                      ],
+                    ),
+                    Text(
+                      netAmount.toStringAsFixed(1),
+                      style: kTitleMedium.copyWith(
+                        color: kPrimaryColor,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
                 ),
                 const SizedBox(height: 40),
                 Row(
@@ -50,26 +68,17 @@ class OrderCardWidget extends StatelessWidget {
                 ),
                 const SizedBox(height: 8),
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Row(
-                      children: [
-                        Text('Contract End Date: ',
-                            style: kTitleSmall.copyWith(color: Colors.grey)),
-                        Text(contract.contractEndDate,
-                            style: kTitleSmall.copyWith(
-                                color: Colors.grey,
-                                fontWeight: FontWeight.bold)),
-                      ],
-                    ),
-                    Text(
-                      netAmount.toStringAsFixed(1),
-                      style: kTitleMedium.copyWith(
-                        color: kPrimaryColor,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
+                    Text('Contract End Date: ',
+                        style: kTitleSmall.copyWith(color: Colors.grey)),
+                    Text(contract.contractEndDate,
+                        style: kTitleSmall.copyWith(
+                            color: Colors.grey, fontWeight: FontWeight.bold)),
                   ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [],
                 ),
               ],
             ),

@@ -42,7 +42,8 @@ class _ShowPropertyTypeFieldsState extends State<ShowPropertyTypeFields> {
             currentFieldCallBack: _nameCallBack,
             hintText: 'Enter name here',
             keyboardType: TextInputType.name,
-            validationCallBack: FormValidator.validateName,
+            validationCallBack: FormValidator.validatePropertyType,
+            shouldPassContext: true,
           ),
         ),
         BottomSheetField(

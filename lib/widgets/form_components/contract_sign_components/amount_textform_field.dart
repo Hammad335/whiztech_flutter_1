@@ -39,11 +39,11 @@ class _AmountTextFormFieldState extends State<AmountTextFormField> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.only(left: 6),
+      // margin: const EdgeInsets.only(left: 6),
       child: TextFormField(
         controller: _controller,
         style: kTitleSmall.copyWith(color: kPrimaryColor),
-        decoration: TextFormFieldDecoration.formFieldDecoration(
+        decoration: TextFormFieldDecoration.underlinedFormFieldDecoration(
           hintText: widget.hint,
           focusNode: widget.amountFocusNode,
         ),

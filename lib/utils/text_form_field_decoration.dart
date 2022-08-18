@@ -3,63 +3,76 @@ import 'package:flutter/material.dart';
 import '../constants/constants.dart';
 
 class TextFormFieldDecoration {
-  static InputDecoration credentialsTextFormFieldDecoration({
+  static InputDecoration outlinedFormFieldDecoration({
     required String hintText,
     required FocusNode focusNode,
-    required IconData iconData,
+    IconData? prefixIconIconData,
     IconButton? suffixIconButton,
+    double? borderWidth,
+    double? borderRadius,
+    bool? filled,
+    Color? filledColor,
   }) {
     return InputDecoration(
       hintText: hintText,
+      contentPadding: const EdgeInsets.only(top: 6, left: 12),
       hintStyle: kTitleSmall.copyWith(
           // color: focusNode.hasFocus ? kPrimaryColor : Colors.white70,
           ),
-      enabledBorder: const OutlineInputBorder(
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(borderRadius ?? 0.0),
         borderSide: BorderSide(
           color: kPrimaryColor,
-          width: 2,
+          width: borderWidth ?? 1.0,
         ),
       ),
-      focusedBorder: const OutlineInputBorder(
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(borderRadius ?? 0.0),
         borderSide: BorderSide(
           color: kPrimaryColor,
-          width: 2,
+          width: borderWidth ?? 1.0,
         ),
       ),
-      disabledBorder: const OutlineInputBorder(
+      disabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(borderRadius ?? 0.0),
         borderSide: BorderSide(
           color: kPrimaryColor,
-          width: 2,
+          width: borderWidth ?? 1.0,
         ),
       ),
-      errorBorder: const OutlineInputBorder(
+      errorBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(borderRadius ?? 0.0),
         borderSide: BorderSide(
           color: kPrimaryColor,
-          width: 2,
+          width: borderWidth ?? 1.0,
         ),
       ),
-      focusedErrorBorder: const OutlineInputBorder(
+      focusedErrorBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(borderRadius ?? 0.0),
         borderSide: BorderSide(
           color: kPrimaryColor,
-          width: 2,
+          width: borderWidth ?? 1.0,
         ),
       ),
-      fillColor: kCredentialTextFieldFillColor,
-      filled: true,
-      prefixIcon: Icon(
-        iconData,
-        color: kPrimaryColor,
-      ),
+      fillColor: filledColor ?? Colors.transparent,
+      filled: filled ?? false,
+      prefixIcon: prefixIconIconData == null
+          ? null
+          : Icon(
+              prefixIconIconData,
+              color: kPrimaryColor,
+            ),
       suffixIcon: suffixIconButton,
     );
   }
 
-  static InputDecoration formFieldDecoration({
+  static InputDecoration underlinedFormFieldDecoration({
     required String hintText,
     required FocusNode focusNode,
   }) {
     return InputDecoration(
       hintText: hintText,
+      // contentPadding: const EdgeInsets.only(left: 8),
       hintStyle: kTitleSmall.copyWith(
           // color: focusNode.hasFocus ? kPrimaryColor : kWhite,
           ),
@@ -73,6 +86,9 @@ class TextFormFieldDecoration {
         borderSide: BorderSide(color: kPrimaryColor),
       ),
       errorBorder: const UnderlineInputBorder(
+        borderSide: BorderSide(color: kPrimaryColor),
+      ),
+      focusedErrorBorder: const UnderlineInputBorder(
         borderSide: BorderSide(color: kPrimaryColor),
       ),
     );

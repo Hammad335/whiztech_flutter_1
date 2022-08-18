@@ -79,51 +79,58 @@ class _ShowContractSignFieldsState extends State<ShowContractSignFields> {
             hint: 'Select end date ',
           ),
         ),
-        BottomSheetField(
-          title: 'Amount :',
-          child: AmountTextFormField(
-            amountFocusNode: _amountFocusNode,
-            amountCallBack: _amountCallBack,
-            fieldName: 'amount',
-            hint: 'Enter price',
-          ),
-        ),
-        BottomSheetField(
-          title: 'Tax/Vat % :',
-          child: AmountTextFormField(
-            amountFocusNode: _taxVatPercentFocusNode,
-            amountCallBack: _taxVatPercentCallBack,
-            fieldName: 'tax_vat_%',
-            hint: 'Enter tax/vat Percentage %',
-          ),
-        ),
-        BottomSheetField(
-          title: 'Tax/Vat Amount :',
-          child: AmountTextFormField(
-            amountFocusNode: _taxVatAmountFocusNode,
-            amountCallBack: _taxVatAmountCallBack,
-            fieldName: 'tax_vat_amount',
-            hint: 'Enter tax/vat amount',
-            readOnly: true,
-          ),
-        ),
-        BottomSheetField(
-          title: 'Discount % :',
-          child: AmountTextFormField(
-            amountFocusNode: _discountPercentFocusNode,
-            amountCallBack: _discountPercentCallBack,
-            fieldName: 'discount_%',
-            hint: 'Enter discount percentage \'%\'',
-          ),
-        ),
-        BottomSheetField(
-          title: 'Discount Amount :',
-          child: AmountTextFormField(
-            amountFocusNode: _discountAmountFocusNode,
-            amountCallBack: _discountAmountCallBack,
-            fieldName: 'discount_amount',
-            hint: 'Enter discount amount',
-            readOnly: true,
+        Padding(
+          padding: const EdgeInsets.only(left: 6),
+          child: Column(
+            children: [
+              BottomSheetField(
+                title: 'Amount :',
+                child: AmountTextFormField(
+                  amountFocusNode: _amountFocusNode,
+                  amountCallBack: _amountCallBack,
+                  fieldName: 'amount',
+                  hint: 'Enter price',
+                ),
+              ),
+              BottomSheetField(
+                title: 'Tax/Vat % :',
+                child: AmountTextFormField(
+                  amountFocusNode: _taxVatPercentFocusNode,
+                  amountCallBack: _taxVatPercentCallBack,
+                  fieldName: 'tax_vat_%',
+                  hint: 'Enter tax/vat Percentage %',
+                ),
+              ),
+              BottomSheetField(
+                title: 'Tax/Vat Amount :',
+                child: AmountTextFormField(
+                  amountFocusNode: _taxVatAmountFocusNode,
+                  amountCallBack: _taxVatAmountCallBack,
+                  fieldName: 'tax_vat_amount',
+                  hint: 'Enter tax/vat amount',
+                  readOnly: true,
+                ),
+              ),
+              BottomSheetField(
+                title: 'Discount % :',
+                child: AmountTextFormField(
+                  amountFocusNode: _discountPercentFocusNode,
+                  amountCallBack: _discountPercentCallBack,
+                  fieldName: 'discount_%',
+                  hint: 'Enter discount percentage \'%\'',
+                ),
+              ),
+              BottomSheetField(
+                title: 'Discount Amount :',
+                child: AmountTextFormField(
+                  amountFocusNode: _discountAmountFocusNode,
+                  amountCallBack: _discountAmountCallBack,
+                  fieldName: 'discount_amount',
+                  hint: 'Enter discount amount',
+                  readOnly: true,
+                ),
+              ),
+            ],
           ),
         ),
       ],

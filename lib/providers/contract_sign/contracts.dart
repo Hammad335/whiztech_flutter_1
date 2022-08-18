@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import '../../models/contract.dart';
 
 class Contracts with ChangeNotifier {
@@ -29,16 +28,28 @@ class Contracts with ChangeNotifier {
         .id;
   }
 
-  List<String> getContracts(String pattern) {
-    List<String> types = [];
+  List<String> getContractClients(String pattern) {
+    List<String> contracts = [];
     for (var contract in _contracts) {
       if (contract.clientSelection
           .toLowerCase()
           .contains(pattern.toLowerCase())) {
-        types.add(contract.clientSelection);
+        contracts.add(contract.clientSelection);
       }
     }
-    return types;
+    return contracts;
+  }
+
+  List<Contract> getContracts(String pattern) {
+    List<Contract> contracts = [];
+    for (var contract in _contracts) {
+      if (contract.clientSelection
+          .toLowerCase()
+          .contains(pattern.toLowerCase())) {
+        contracts.add(contract);
+      }
+    }
+    return contracts;
   }
 
   bool doesExist(String client) {

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import 'package:collection/collection.dart';
 import '../../models/client.dart';
 
 class Clients with ChangeNotifier {
@@ -23,19 +23,14 @@ class Clients with ChangeNotifier {
     return types;
   }
 
-  bool doesExist(String type) {
+  bool doesExist(String name) {
     bool doesExist = false;
-    try {
-      _clients.firstWhere((element) {
-        if (element.name == type) {
-          return doesExist = true;
-        } else {
-          return doesExist = false;
-        }
-      });
-    } catch (e) {
-      doesExist = false;
-    }
+    _clients.firstWhereOrNull((element) {
+      if (element.name.trim().toLowerCase() == name.trim().toLowerCase()) {
+        return doesExist = true;
+      }
+      return doesExist = false;
+    });
     return doesExist;
   }
 }

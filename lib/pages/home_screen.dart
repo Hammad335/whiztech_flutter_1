@@ -4,23 +4,19 @@ import 'package:whiztech_flutter_first_project/constants/constants.dart';
 import 'package:whiztech_flutter_first_project/models/property.dart';
 import 'package:whiztech_flutter_first_project/models/property_type.dart';
 import 'package:whiztech_flutter_first_project/models/received_amount.dart';
-import 'package:whiztech_flutter_first_project/pages/form_bottom_sheet.dart';
-import 'package:whiztech_flutter_first_project/providers/card_state_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:whiztech_flutter_first_project/providers/client_creation/clients.dart';
-import 'package:whiztech_flutter_first_project/providers/contract_sign_amount_disc_provider.dart';
 import 'package:whiztech_flutter_first_project/providers/create_property/properties.dart';
 import 'package:whiztech_flutter_first_project/providers/property_type/property_types.dart';
+import '../constants/DUMMY_DATA.dart';
 import '../models/client.dart';
 import '../models/contract.dart';
 import '../providers/contract_sign/contracts.dart';
 import '../providers/received_amounts/received_amounts.dart';
 import '../providers/user.dart' as userProvider;
-import '../constants/DUMMY_DATA.dart';
-import '../widgets/form_card.dart';
+import '../widgets/custom_carousel_slider.dart';
+import '../widgets/custom_grid_view.dart';
 import 'package:provider/provider.dart';
-
-import 'contract_history_page.dart';
 
 class HomeScreen extends StatefulWidget {
   static const routeName = 'home-screen';
@@ -61,7 +57,23 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Home'), backgroundColor: kPrimaryColor),
+      appBar: AppBar(
+        title: const Text('Home'),
+        backgroundColor: kPrimaryColor,
+        actions: [
+          PopupMenuButton(
+            onSelected: (value) {},
+            itemBuilder: (context) {
+              return menuOptions.map((String menuOption) {
+                return PopupMenuItem<String>(
+                  value: menuOption,
+                  child: Text(menuOption),
+                );
+              }).toList();
+            },
+          )
+        ],
+      ),
       body: SafeArea(
         child: FutureBuilder(
           future: Future.wait([
@@ -77,13 +89,15 @@ class _HomeScreenState extends State<HomeScreen> {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const Center(
                   child: CircularProgressIndicator(color: kPrimaryColor));
-            }
-            if (snapshot.hasError) {
+            } else if (snapshot.hasError) {
               return const Center(
                   child: Text('Something went wrong, try again later.',
                       style: kTitleMedium));
-            }
-            if (snapshot.connectionState == ConnectionState.done) {
+            } else if (snapshot.connectionState == ConnectionState.done) {
+              if (snapshot.hasError) {
+                const Text('Something went wrong, try again later.',
+                    style: kTitleMedium);
+              }
               // set user
               final user = snapshot.data![0] as Map<String, dynamic>;
               Provider.of<userProvider.User>(context, listen: false).setUser(
@@ -142,37 +156,13 @@ class _HomeScreenState extends State<HomeScreen> {
               }
               Provider.of<ReceivedAmounts>(context, listen: false)
                   .populateReceivedAmounts = lst5;
-              return Container(
-                margin: const EdgeInsets.only(top: 110),
-                child: GridView.count(
-                  crossAxisCount: 3,
-                  padding: const EdgeInsets.only(top: 40, left: 4, right: 4),
-                  crossAxisSpacing: 10,
-                  mainAxisSpacing: 10,
-                  children: List.generate(9, (index) {
-                    return GestureDetector(
-                      onTap: () {
-                        Provider.of<CardStateProvider>(context, listen: false)
-                            .setSelectedCard(cardNames.keys.toList()[index]);
-                        if (index == 4) {
-                          Navigator.of(context)
-                              .pushNamed(ContractHistoryPage.routeName);
-                          return;
-                        }
-                        showModalBottomSheet(
-                            context: context,
-                            isScrollControlled: true,
-                            backgroundColor: Colors.transparent,
-                            builder: (context) {
-                              return SingleChildScrollView(
-                                child: FormBottomSheet(index: index),
-                              );
-                            });
-                      },
-                      child: FormCard(cardModel: cards[index]),
-                    );
-                  }),
-                ),
+              return Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: const [
+                  CustomCarouselSlider(),
+                  SizedBox(height: 10),
+                  CustomGridView(),
+                ],
               );
             }
             return const Center(

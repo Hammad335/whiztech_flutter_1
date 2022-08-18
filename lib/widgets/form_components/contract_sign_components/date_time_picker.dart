@@ -37,6 +37,12 @@ class _DateTimePickerState extends State<DateTimePicker> {
           enabledBorder: const UnderlineInputBorder(
             borderSide: BorderSide(color: kPrimaryColor),
           ),
+          errorBorder: const UnderlineInputBorder(
+            borderSide: BorderSide(color: kPrimaryColor),
+          ),
+          focusedErrorBorder: const UnderlineInputBorder(
+            borderSide: BorderSide(color: kPrimaryColor),
+          ),
         ),
         focusNode: widget.dateTimeFocusNode,
         textInputAction: TextInputAction.done,

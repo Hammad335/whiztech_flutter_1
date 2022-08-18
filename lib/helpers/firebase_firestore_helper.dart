@@ -15,11 +15,6 @@ class FirebaseFirestoreHelper {
       String selectedCard,
       BuildContext context,
       String alreadyReceivedAmountId) async {
-    final receivedAmount = Provider.of<ReceivedAmounts>(context, listen: false)
-        .getByContractId(json['contract id'] as String);
-    print(alreadyReceivedAmountId);
-    print(receivedAmount!.id);
-    // if (receivedAmount != null) {
     await _firestore
         .collection('forms')
         .doc(_user!.uid)
@@ -65,7 +60,7 @@ class FirebaseFirestoreHelper {
     // add user data to firestore
     await _firestore.collection('users').doc(response.user!.uid).set({
       'userName': userName,
-      'email': password,
+      'email': email,
     });
     return response;
   }

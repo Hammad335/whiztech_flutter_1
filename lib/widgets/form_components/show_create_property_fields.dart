@@ -47,7 +47,8 @@ class _ShowCreatePropertyFieldsState extends State<ShowCreatePropertyFields> {
               hintText: 'Enter name here',
               firstFocusNode: _nameFocusNode,
               keyboardType: TextInputType.name,
-              validationCallBack: FormValidator.validateName,
+              validationCallBack: FormValidator.validatePropertyName,
+              shouldPassContext: true,
             )),
         BottomSheetField(
           title: 'Size: ',
