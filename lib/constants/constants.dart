@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:pdf/widgets.dart' as pw;
+import 'package:pdf/pdf.dart';
 
 const Color kPrimaryColor = Colors.indigo;
 Color kCredentialTextFieldFillColor = Colors.deepPurpleAccent.withOpacity(0.3);
@@ -20,6 +22,11 @@ const TextStyle kTitleSmallPrimary = TextStyle(
   fontSize: 17,
   fontWeight: FontWeight.bold,
   color: kPrimaryColor,
+);
+pw.TextStyle kPwTitleLargePrimary = pw.TextStyle(
+  fontSize: 25,
+  fontWeight: pw.FontWeight.bold,
+  color: PdfColors.indigo,
 );
 
 const TextStyle kTitleMedium = TextStyle(

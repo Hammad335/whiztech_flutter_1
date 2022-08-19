@@ -19,11 +19,11 @@ class LedgerBalanceRow extends StatelessWidget {
         // mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           SizedBox(
-            width: 44.w,
+            width: 20.w,
             child: Padding(
               padding: const EdgeInsets.only(right: 25),
               child: Text(
-                contract.id!,
+                contract.id!.substring(0, 4),
                 style: kTitleSmallBlack,
               ),
             ),
@@ -31,15 +31,24 @@ class LedgerBalanceRow extends StatelessWidget {
           SizedBox(
             width: 24.w,
             child: Text(
-              contract.netAmount.toString(),
+              contract.netAmount.toStringAsFixed(1),
               style: kTitleSmallBlack,
               // textAlign: TextAlign.start,
             ),
           ),
           SizedBox(
-            width: 20.w,
+            width: 24.w,
             child: Text(
               _getReceivedAmount,
+              style: kTitleSmallBlack,
+              // textAlign: TextAlign.start,
+            ),
+          ),
+          SizedBox(
+            width: 24.w,
+            child: Text(
+              (contract.netAmount - double.parse(_getReceivedAmount))
+                  .toStringAsFixed(1),
               style: kTitleSmallBlack,
               // textAlign: TextAlign.start,
             ),
@@ -52,6 +61,6 @@ class LedgerBalanceRow extends StatelessWidget {
   String get _getReceivedAmount {
     return receivedAmount == null
         ? 0.0.toString()
-        : receivedAmount!.receiveAmount.toString();
+        : receivedAmount!.receiveAmount.toStringAsFixed(1);
   }
 }

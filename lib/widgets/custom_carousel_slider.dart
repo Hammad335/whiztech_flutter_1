@@ -12,7 +12,7 @@ class CustomCarouselSlider extends StatelessWidget {
         options: CarouselOptions(
           autoPlay: true,
           enlargeCenterPage: true,
-          aspectRatio: 9 / 6,
+          aspectRatio: 10 / 6,
           viewportFraction: 0.8,
         ),
         items: [1, 2, 3, 4].map((i) {

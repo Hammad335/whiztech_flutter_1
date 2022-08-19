@@ -22,6 +22,10 @@ class Contracts with ChangeNotifier {
         .firstWhere((element) => element.clientSelection == pattern);
   }
 
+  Contract getSingleContractById(String id) {
+    return _contracts.firstWhere((element) => element.id == id);
+  }
+
   String? getContractIdByName(String pattern) {
     return _contracts
         .firstWhere((element) => element.clientSelection == pattern)
@@ -34,10 +38,22 @@ class Contracts with ChangeNotifier {
       if (contract.clientSelection
           .toLowerCase()
           .contains(pattern.toLowerCase())) {
-        contracts.add(contract.clientSelection);
+        contracts.add('${contract.clientSelection}:${contract.id}');
       }
     }
     return contracts;
+  }
+
+  List<String> getDistinctContractClients(String pattern) {
+    Set<String> contracts = {};
+    for (Contract contract in _contracts) {
+      if (contract.clientSelection
+          .toLowerCase()
+          .contains(pattern.toLowerCase())) {
+        contracts.add(contract.clientSelection);
+      }
+    }
+    return contracts.toList();
   }
 
   List<Contract> getContracts(String pattern) {

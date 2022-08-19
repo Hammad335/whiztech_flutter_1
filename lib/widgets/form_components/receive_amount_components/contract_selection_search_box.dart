@@ -15,6 +15,8 @@ class ContractSelectionSearchBox extends StatefulWidget {
   final TextEditingController? contractDateController;
   final TextEditingController? contractAmountController;
   Function(String?, BuildContext) validationCallBack;
+  Color? hintTextColor;
+  IconData? prefixIconData;
 
   ContractSelectionSearchBox({
     required this.firstFocusNode,
@@ -25,6 +27,8 @@ class ContractSelectionSearchBox extends StatefulWidget {
     this.contractDateController,
     this.contractAmountController,
     required this.validationCallBack,
+    this.hintTextColor,
+    this.prefixIconData,
   });
 
   @override
@@ -37,6 +41,7 @@ class _ContractSelectionSearchBoxState
   late Contracts _contracts;
   late ReceivedAmounts _receivedAmounts;
   late TextEditingController _controller;
+  String contractId = '';
 
   @override
   void initState() {
@@ -53,29 +58,33 @@ class _ContractSelectionSearchBoxState
         controller: _controller,
         style: kTitleSmall.copyWith(color: kPrimaryColor),
         decoration: TextFormFieldDecoration.outlinedFormFieldDecoration(
-          hintText: widget.hintText,
-          focusNode: widget.firstFocusNode,
-          borderRadius: 10.0,
-        ),
+            hintText: widget.hintText,
+            focusNode: widget.firstFocusNode,
+            borderRadius: 10.0,
+            hintTextColor: widget.hintTextColor,
+            prefixIconIconData: widget.prefixIconData),
         focusNode: widget.firstFocusNode,
         textInputAction: TextInputAction.done,
         keyboardType: widget.keyboardType,
       ),
       suggestionsCallback: (pattern) async {
+        if (widget.contractAmountController == null &&
+            widget.contractDateController == null) {
+          return _contracts.getDistinctContractClients(pattern);
+        }
         return _contracts.getContractClients(pattern);
       },
       itemBuilder: (context, suggestion) {
         return ListTile(
-          title: Text(suggestion.toString()),
+          title: Text(suggestion.split(':').first),
         );
       },
       onSuggestionSelected: (suggestion) {
-        _controller.text = suggestion;
-        widget.currentFieldCallBack(suggestion);
+        _controller.text = suggestion.split(':').first;
         if (widget.contractAmountController != null &&
             widget.contractDateController != null) {
-          final selectedContract =
-              _contracts.getSingleContract(suggestion.trim());
+          contractId = suggestion.split(':').last;
+          final selectedContract = _contracts.getSingleContractById(contractId);
           final receivedAmount =
               _receivedAmounts.getByContractId(selectedContract.id!);
           double receivedDouble = 0.0;
@@ -87,14 +96,15 @@ class _ContractSelectionSearchBoxState
               remainingAmount.toStringAsFixed(1);
           widget.contractDateController!.text =
               selectedContract.contractStartDate;
+        } else {
+          widget.currentFieldCallBack(suggestion.split(':').first);
         }
       },
       onSaved: (value) {
         widget.currentFieldCallBack(value);
         widget.contractIdCallBack == null
             ? null
-            : widget
-                .contractIdCallBack!(_contracts.getContractIdByName(value!));
+            : widget.contractIdCallBack!(contractId);
       },
       validator: (value) => widget.validationCallBack(value, context),
     );

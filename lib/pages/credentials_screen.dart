@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:whiztech_flutter_first_project/pages/home_screen.dart';
 import '../constants/constants.dart';
+import '../utils/form_validator.dart';
 import '../utils/utils.dart';
 import '../utils/text_form_field_decoration.dart';
 import '../helpers/firebase_firestore_helper.dart';
@@ -127,7 +128,7 @@ class _CredentialsScreenState extends State<CredentialsScreen> {
                               if (!_createAccount) {
                                 return null;
                               } else {
-                                return Utils.userNameValidation(userName);
+                                return FormValidator.validateUserName(userName);
                               }
                             },
                           ),
@@ -157,7 +158,7 @@ class _CredentialsScreenState extends State<CredentialsScreen> {
                                 .requestFocus(_passwordFocusNode);
                           },
                           onSaved: (email) => _email = email!,
-                          validator: Utils.emailValidation,
+                          validator: FormValidator.validateEmail,
                         ),
                       ),
                       const SizedBox(height: 10),
@@ -190,7 +191,7 @@ class _CredentialsScreenState extends State<CredentialsScreen> {
                           keyboardType: TextInputType.visiblePassword,
                           focusNode: _passwordFocusNode,
                           onSaved: (password) => _password = password!,
-                          validator: Utils.passwordValidation,
+                          validator: FormValidator.validatePassword,
                         ),
                       ),
                       const SizedBox(

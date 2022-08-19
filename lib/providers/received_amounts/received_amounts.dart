@@ -5,6 +5,16 @@ import 'package:collection/collection.dart';
 class ReceivedAmounts with ChangeNotifier {
   List<ReceivedAmount> _receivedAmounts = [];
 
+  double getTotalCreditByName(String name) {
+    double total = 0.0;
+    for (ReceivedAmount receivedAmount in _receivedAmounts) {
+      if (receivedAmount.contract == name) {
+        total += receivedAmount.receiveAmount;
+      }
+    }
+    return total;
+  }
+
   void addReceivedAmount(ReceivedAmount receivedAmount, String id) {
     final json = receivedAmount.toJson()..putIfAbsent('id', () => id);
     _receivedAmounts.add(ReceivedAmount.fromJson(json));

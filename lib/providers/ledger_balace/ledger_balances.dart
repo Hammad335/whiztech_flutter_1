@@ -9,8 +9,22 @@ class LedgerBalances with ChangeNotifier {
     return [..._ledgerBalanceContracts];
   }
 
+  double get getTotalDebit {
+    double total = 0.0;
+    for (var contract in _ledgerBalanceContracts) {
+      total += contract.netAmount;
+    }
+    return total;
+  }
+
   void setContracts(List<Contract> contracts) {
+    clear();
     _ledgerBalanceContracts = contracts;
     notifyListeners();
+  }
+
+  void clear() {
+    _ledgerBalanceContracts.clear();
+    _ledgerBalanceContracts = [];
   }
 }

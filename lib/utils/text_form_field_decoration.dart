@@ -12,13 +12,14 @@ class TextFormFieldDecoration {
     double? borderRadius,
     bool? filled,
     Color? filledColor,
+    Color? hintTextColor,
   }) {
     return InputDecoration(
       hintText: hintText,
       contentPadding: const EdgeInsets.only(top: 6, left: 12),
       hintStyle: kTitleSmall.copyWith(
-          // color: focusNode.hasFocus ? kPrimaryColor : Colors.white70,
-          ),
+        color: hintTextColor,
+      ),
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(borderRadius ?? 0.0),
         borderSide: BorderSide(
