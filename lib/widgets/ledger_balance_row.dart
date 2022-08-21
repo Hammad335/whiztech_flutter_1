@@ -13,7 +13,7 @@ class LedgerBalanceRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.only(top: 8),
+      padding: const EdgeInsets.only(top: 12),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         // mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -21,10 +21,12 @@ class LedgerBalanceRow extends StatelessWidget {
           SizedBox(
             width: 20.w,
             child: Padding(
-              padding: const EdgeInsets.only(right: 25),
+              padding: const EdgeInsets.only(right: 20),
               child: Text(
-                contract.id!.substring(0, 4),
+                contract.id!.substring(0, 5),
                 style: kTitleSmallBlack,
+                softWrap: true,
+                maxLines: 1,
               ),
             ),
           ),

@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:whiztech_flutter_first_project/providers/client_creation/clients.dart';
 import 'package:whiztech_flutter_first_project/providers/contract_sign/contract_sign_provider.dart';
-import 'contract_sign_components/client_selection_search_box.dart';
+import 'package:whiztech_flutter_first_project/providers/contract_sign_amount_disc_provider.dart';
+import 'package:whiztech_flutter_first_project/providers/create_property/properties.dart';
+import 'package:whiztech_flutter_first_project/utils/form_validator.dart';
 import '../bottom_sheet_field.dart';
-import 'contract_sign_components/amount_textform_field.dart';
-import 'contract_sign_components/date_time_picker.dart';
-import 'contract_sign_components/property_selection_search_box.dart';
+import 'reused_fields/date_time_picker.dart';
+import 'reused_fields/custom_selection_search_box.dart';
+import 'reused_fields/custom_textform_field.dart';
 
 class ShowContractSignFields extends StatefulWidget {
   @override
@@ -22,13 +26,29 @@ class _ShowContractSignFieldsState extends State<ShowContractSignFields> {
   final _taxVatAmountFocusNode = FocusNode();
   final _discountPercentFocusNode = FocusNode();
   final _discountAmountFocusNode = FocusNode();
-  late ContractSignProvider contractSignProvider;
+  final TextEditingController _amountController = TextEditingController();
+  final TextEditingController _taxVatPercentController =
+      TextEditingController();
+  final TextEditingController _taxVatAmountController = TextEditingController();
+  final TextEditingController _discountPercentController =
+      TextEditingController();
+  final TextEditingController _discountAmountController =
+      TextEditingController();
+  late ContractSignProvider _contractSignProvider;
+  late Clients _clients;
+  late Properties _properties;
+  late ContractSignAmountDiscProvider _amountDiscProvider;
 
   @override
   void initState() {
     super.initState();
-    contractSignProvider =
+    _contractSignProvider =
         Provider.of<ContractSignProvider>(context, listen: false);
+    _clients = Provider.of<Clients>(context, listen: false);
+    _properties = Provider.of<Properties>(context, listen: false);
+    _amountDiscProvider =
+        Provider.of<ContractSignAmountDiscProvider>(context, listen: false);
+    _setControllersToAmountDiscountProvider();
   }
 
   @override
@@ -51,16 +71,29 @@ class _ShowContractSignFieldsState extends State<ShowContractSignFields> {
       children: [
         BottomSheetField(
           title: 'Client Selection : ',
-          child: ClientSelectionSearchBox(
-            clientSelectionFocusNode: _clientSelectionFocusNode,
-            clientSelectionCallBack: _clientSelectionCallBack,
+          child: CustomSelectionSearchBox(
+            hintText: 'Search client here',
+            firstFocusNode: _clientSelectionFocusNode,
+            keyboardType: TextInputType.name,
+            validationCallBack:
+                FormValidator.validateContractClientCaseSensitive,
+            onSavedCallBack: _clientSelectionOnSavedCallBack,
+            suggestionsCallBack: _clientSuggestionsCallBack,
+            onSuggestionSelectedCallBack: _onSuggestionSelectedCallBack,
+            itemBuilderCallBack: _itemBuilderCallBack,
           ),
         ),
         BottomSheetField(
           title: 'Property Selection : ',
-          child: PropertySelectionSearchBox(
-            propertySelectionFocusNode: _propertySelectionFocusNode,
-            propertySelectionCallBack: _propertySelectionCallBack,
+          child: CustomSelectionSearchBox(
+            hintText: 'Search property here',
+            firstFocusNode: _propertySelectionFocusNode,
+            keyboardType: TextInputType.name,
+            validationCallBack: FormValidator.validatePropertyNameCaseSensitive,
+            itemBuilderCallBack: _itemBuilderCallBack,
+            onSuggestionSelectedCallBack: _onSuggestionSelectedCallBack,
+            suggestionsCallBack: _propertySuggestionsCallBack,
+            onSavedCallBack: _propertySelectionOnSavedCallBack,
           ),
         ),
         BottomSheetField(
@@ -80,54 +113,77 @@ class _ShowContractSignFieldsState extends State<ShowContractSignFields> {
           ),
         ),
         Padding(
-          padding: const EdgeInsets.only(left: 6),
+          padding: const EdgeInsets.only(left: 4),
           child: Column(
             children: [
               BottomSheetField(
                 title: 'Amount :',
-                child: AmountTextFormField(
-                  amountFocusNode: _amountFocusNode,
-                  amountCallBack: _amountCallBack,
+                child: CustomTextFormField(
+                  hintText: 'Enter contract amount',
+                  firstFocusNode: _amountFocusNode,
+                  keyboardType: TextInputType.number,
                   fieldName: 'amount',
-                  hint: 'Enter price',
+                  currentController: _amountController,
+                  currentFieldCallBack: _amountCallBack,
+                  validationCallBack: FormValidator.validateAmount,
+                  contractAmountOnChangedCallBack:
+                      _contractAmountOnChangedCallBack,
                 ),
               ),
               BottomSheetField(
                 title: 'Tax/Vat % :',
-                child: AmountTextFormField(
-                  amountFocusNode: _taxVatPercentFocusNode,
-                  amountCallBack: _taxVatPercentCallBack,
+                child: CustomTextFormField(
+                  hintText: 'Enter tax/vat percentage %',
                   fieldName: 'tax_vat_%',
-                  hint: 'Enter tax/vat Percentage %',
+                  firstFocusNode: _taxVatPercentFocusNode,
+                  validationCallBack: FormValidator.validateAmount,
+                  currentFieldCallBack: _taxVatPercentCallBack,
+                  keyboardType: TextInputType.number,
+                  currentController: _taxVatPercentController,
+                  contractAmountOnChangedCallBack:
+                      _contractAmountOnChangedCallBack,
                 ),
               ),
               BottomSheetField(
                 title: 'Tax/Vat Amount :',
-                child: AmountTextFormField(
-                  amountFocusNode: _taxVatAmountFocusNode,
-                  amountCallBack: _taxVatAmountCallBack,
+                child: CustomTextFormField(
+                  hintText: 'Enter tax/vat amount',
+                  firstFocusNode: _taxVatAmountFocusNode,
+                  currentController: _taxVatAmountController,
                   fieldName: 'tax_vat_amount',
-                  hint: 'Enter tax/vat amount',
-                  readOnly: true,
+                  keyboardType: TextInputType.number,
+                  currentFieldCallBack: _taxVatAmountCallBack,
+                  validationCallBack: FormValidator.validateAmount,
+                  contractAmountOnChangedCallBack:
+                      _contractAmountOnChangedCallBack,
                 ),
               ),
               BottomSheetField(
                 title: 'Discount % :',
-                child: AmountTextFormField(
-                  amountFocusNode: _discountPercentFocusNode,
-                  amountCallBack: _discountPercentCallBack,
+                child: CustomTextFormField(
+                  hintText: 'Enter discount percentage %',
                   fieldName: 'discount_%',
-                  hint: 'Enter discount percentage \'%\'',
+                  keyboardType: TextInputType.number,
+                  currentController: _discountPercentController,
+                  firstFocusNode: _discountPercentFocusNode,
+                  validationCallBack: FormValidator.validateAmount,
+                  currentFieldCallBack: _discountPercentCallBack,
+                  contractAmountOnChangedCallBack:
+                      _contractAmountOnChangedCallBack,
                 ),
               ),
               BottomSheetField(
                 title: 'Discount Amount :',
-                child: AmountTextFormField(
-                  amountFocusNode: _discountAmountFocusNode,
-                  amountCallBack: _discountAmountCallBack,
+                child: CustomTextFormField(
+                  hintText: 'Enter discount amount',
                   fieldName: 'discount_amount',
-                  hint: 'Enter discount amount',
-                  readOnly: true,
+                  keyboardType: TextInputType.number,
+                  currentController: _discountAmountController,
+                  firstFocusNode: _discountAmountFocusNode,
+                  validationCallBack: FormValidator.validateAmount,
+                  currentFieldCallBack: _discountAmountCallBack,
+                  contractAmountOnChangedCallBack:
+                      _contractAmountOnChangedCallBack,
                 ),
               ),
             ],
@@ -137,44 +193,75 @@ class _ShowContractSignFieldsState extends State<ShowContractSignFields> {
     );
   }
 
-  void _clientSelectionCallBack(String clientSelection) {
-    contractSignProvider.clientSelection = clientSelection;
+  Widget _itemBuilderCallBack(context, suggestion) {
+    return ListTile(
+      title: Text(suggestion.toString()),
+    );
   }
 
-  void _propertySelectionCallBack(String propertySelection) {
-    contractSignProvider.propertySelection = propertySelection;
+  List<String> _clientSuggestionsCallBack(String pattern) {
+    return _clients.getClientTypes(pattern);
+  }
+
+  List<String> _propertySuggestionsCallBack(String pattern) {
+    return _properties.getProperties(pattern);
+  }
+
+  void _onSuggestionSelectedCallBack(
+      String suggestion, TextEditingController controller) {
+    controller.text = suggestion;
+  }
+
+  void _contractAmountOnChangedCallBack(String amount, String fieldName) {
+    _amountDiscProvider.onChanged(fieldName, amount);
+  }
+
+  void _clientSelectionOnSavedCallBack(String value) {
+    _contractSignProvider.clientSelection = value;
+  }
+
+  void _propertySelectionOnSavedCallBack(String value) {
+    _contractSignProvider.propertySelection = value;
   }
 
   void _contractStartDateCallBack(String dateTime) {
-    contractSignProvider.contractStartDate = dateTime;
+    _contractSignProvider.contractStartDate = dateTime;
   }
 
   void _contractEndDateCallBack(String dateTime) {
-    contractSignProvider.contractEndDate = dateTime;
+    _contractSignProvider.contractEndDate = dateTime;
   }
 
   void _amountCallBack(String amount) {
     final am = double.parse(amount);
-    contractSignProvider.amount = am;
+    _contractSignProvider.amount = am;
   }
 
   void _taxVatPercentCallBack(String percent) {
     final perc = double.parse(percent);
-    contractSignProvider.taxVatPercentage = perc;
+    _contractSignProvider.taxVatPercentage = perc;
   }
 
   void _taxVatAmountCallBack(String taxVatAmount) {
     final am = double.parse(taxVatAmount);
-    contractSignProvider.taxVatAmount = am;
+    _contractSignProvider.taxVatAmount = am;
   }
 
   void _discountPercentCallBack(String percent) {
     final perc = double.parse(percent);
-    contractSignProvider.discountPercentage = perc;
+    _contractSignProvider.discountPercentage = perc;
   }
 
   void _discountAmountCallBack(String discountAmount) {
     final am = double.parse(discountAmount);
-    contractSignProvider.discountAmount = am;
+    _contractSignProvider.discountAmount = am;
+  }
+
+  void _setControllersToAmountDiscountProvider() {
+    _amountDiscProvider.setTaxVatPercentController = _taxVatPercentController;
+    _amountDiscProvider.setTaxVatAmountController = _taxVatAmountController;
+    _amountDiscProvider.setDiscountPercentController =
+        _discountPercentController;
+    _amountDiscProvider.setDiscountAmountController = _discountAmountController;
   }
 }

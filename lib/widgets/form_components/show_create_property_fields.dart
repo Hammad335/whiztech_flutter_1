@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:whiztech_flutter_first_project/providers/create_property/property_provider.dart';
+import 'package:whiztech_flutter_first_project/providers/property_type/property_types.dart';
 import 'package:whiztech_flutter_first_project/utils/form_validator.dart';
+import 'package:whiztech_flutter_first_project/widgets/form_components/reused_fields/custom_selection_search_box.dart';
 import 'package:whiztech_flutter_first_project/widgets/form_components/reused_fields/custom_textform_field.dart';
 import '../bottom_sheet_field.dart';
-import 'create_property_components/property_type_textform_field.dart';
 
 class ShowCreatePropertyFields extends StatefulWidget {
   const ShowCreatePropertyFields({Key? key}) : super(key: key);
@@ -20,11 +21,13 @@ class _ShowCreatePropertyFieldsState extends State<ShowCreatePropertyFields> {
   final _sizeFocusNode = FocusNode();
   final _propertyTypeFocusNode = FocusNode();
   late PropertyProvider provider;
+  late PropertyTypes _propertyTypes;
 
   @override
   void initState() {
     super.initState();
     provider = Provider.of<PropertyProvider>(context, listen: false);
+    _propertyTypes = Provider.of<PropertyTypes>(context, listen: false);
   }
 
   @override
@@ -63,13 +66,38 @@ class _ShowCreatePropertyFieldsState extends State<ShowCreatePropertyFields> {
         ),
         BottomSheetField(
           title: 'Property Type',
-          child: PropertyTypeTextFormField(
-            propertyTypeFocusNode: _propertyTypeFocusNode,
-            propertyTypeCallBack: _propertyTypeCallBack,
+          child: CustomSelectionSearchBox(
+            hintText: 'Search property type here',
+            firstFocusNode: _propertyTypeFocusNode,
+            validationCallBack: FormValidator.validatePropertyTypeCaseSensitive,
+            keyboardType: TextInputType.text,
+            suggestionsCallBack: _suggestionsCallBack,
+            onSuggestionSelectedCallBack: _onSuggestionSelectedCallBack,
+            itemBuilderCallBack: _itemBuilderCallBack,
+            onSavedCallBack: _onSavedCallBack,
           ),
         ),
       ],
     );
+  }
+
+  Widget _itemBuilderCallBack(context, suggestion) {
+    return ListTile(
+      title: Text(suggestion.toString()),
+    );
+  }
+
+  List<String> _suggestionsCallBack(pattern) {
+    return _propertyTypes.getPropertyTypes(pattern);
+  }
+
+  void _onSuggestionSelectedCallBack(
+      String suggestion, TextEditingController controller) {
+    controller.text = suggestion;
+  }
+
+  void _onSavedCallBack(String propertyType) {
+    provider.propertyType = propertyType;
   }
 
   void _nameCallBack(String name) {
@@ -78,9 +106,5 @@ class _ShowCreatePropertyFieldsState extends State<ShowCreatePropertyFields> {
 
   void _sizeCallBack(String size) {
     provider.size = size;
-  }
-
-  void _propertyTypeCallBack(String propertyType) {
-    provider.propertyType = propertyType;
   }
 }

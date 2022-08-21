@@ -33,4 +33,15 @@ class Clients with ChangeNotifier {
     });
     return doesExist;
   }
+
+  bool doesExistCaseSensitive(String name) {
+    bool doesExist = false;
+    _clients.firstWhereOrNull((element) {
+      if (element.name.trim() == name.trim()) {
+        return doesExist = true;
+      }
+      return doesExist = false;
+    });
+    return doesExist;
+  }
 }

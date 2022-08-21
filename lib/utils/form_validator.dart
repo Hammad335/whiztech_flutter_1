@@ -51,6 +51,19 @@ class FormValidator {
     return null;
   }
 
+  static String? validatePropertyNameCaseSensitive(
+      String? name, BuildContext context) {
+    final properties = Provider.of<Properties>(context, listen: false);
+    if (name == null || name.isEmpty) {
+      return 'Please provide name';
+    } else if (name.length >= 21) {
+      return 'Too long';
+    } else if (!properties.doesExistCaseSensitive(name)) {
+      return 'Property does not exist';
+    }
+    return null;
+  }
+
   static String? validateSize(String? size) {
     if (size == null || size.isEmpty) {
       return 'Please provide size';
@@ -90,12 +103,13 @@ class FormValidator {
     return null;
   }
 
-  static String? validateContractClient(String? client, BuildContext context) {
+  static String? validateContractClientCaseSensitive(
+      String? client, BuildContext context) {
     final provider = Provider.of<Contracts>(context, listen: false);
     if (client == null || client.isEmpty) {
       return 'Please select any contract';
     }
-    if (!provider.doesExist(client)) {
+    if (!provider.doesExistCaseSensitive(client)) {
       return 'client does not exist';
     }
     return null;
@@ -113,13 +127,25 @@ class FormValidator {
     return null;
   }
 
+  static String? validatePropertyTypeCaseSensitive(
+      String? propertyType, BuildContext context) {
+    final provider = Provider.of<PropertyTypes>(context, listen: false);
+    if (propertyType == null || propertyType.isEmpty) {
+      return 'Please select property type';
+    }
+    if (!provider.doesExistCaseSensitive(propertyType)) {
+      return 'Property type does not exist';
+    }
+    return null;
+  }
+
   static String? doNotValidate(String? data) {
     return null;
   }
 
-  static String? validateReceivedAmount(String? amount) {
+  static String? validateAmount(String? amount) {
     if (amount == null || amount.isEmpty) {
-      return 'Please enter received amount';
+      return 'Please enter amount';
     } else if (double.tryParse(amount) == null) {
       return 'Enter valid amount';
     }

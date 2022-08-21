@@ -6,7 +6,7 @@ import 'package:whiztech_flutter_first_project/providers/contract_sign/contracts
 import 'package:whiztech_flutter_first_project/providers/ledger_balace/ledger_balances.dart';
 import 'package:whiztech_flutter_first_project/providers/received_amounts/received_amounts.dart';
 import 'package:whiztech_flutter_first_project/utils/form_validator.dart';
-import 'package:whiztech_flutter_first_project/widgets/form_components/receive_amount_components/contract_selection_search_box.dart';
+import 'package:whiztech_flutter_first_project/widgets/form_components/reused_fields/custom_selection_search_box.dart';
 import '../models/received_amount.dart';
 import '../widgets/ledger_balance_row.dart';
 import 'package:sizer/sizer.dart';
@@ -67,11 +67,15 @@ class _LedgerBalancePageState extends State<LedgerBalancePage> {
               children: [
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: ContractSelectionSearchBox(
+                  child: CustomSelectionSearchBox(
                     hintText: 'Search contract client',
                     firstFocusNode: _searchContractFocusNode,
-                    currentFieldCallBack: _searchContractCallBack,
-                    validationCallBack: FormValidator.validateContractClient,
+                    onSavedCallBack: _onSavedCallBack,
+                    onSuggestionSelectedCallBack: _onSuggestionSelectedCallBack,
+                    suggestionsCallBack: _suggestionsCallBack,
+                    itemBuilderCallBack: _itemBuilderCallBack,
+                    validationCallBack:
+                        FormValidator.validateContractClientCaseSensitive,
                     keyboardType: TextInputType.name,
                     hintTextColor: kPrimaryColor,
                     prefixIconData: Icons.search,
@@ -191,7 +195,27 @@ class _LedgerBalancePageState extends State<LedgerBalancePage> {
     );
   }
 
-  void _searchContractCallBack(String clientName) {
+  Widget _itemBuilderCallBack(context, suggestion) {
+    return ListTile(
+      title: Text(suggestion.toString()),
+    );
+  }
+
+  List<String> _suggestionsCallBack(pattern) {
+    return _contracts.getDistinctContractClients(pattern);
+  }
+
+  void _onSuggestionSelectedCallBack(
+      String suggestion, TextEditingController controller) {
+    controller.text = suggestion.toString();
+    _setLedgerBalanceContracts(suggestion.toString());
+  }
+
+  void _onSavedCallBack(String contractClient) {
+    // _searchContractCallBack(contractClient);
+  }
+
+  void _setLedgerBalanceContracts(String clientName) {
     _ledgerBalances.setContracts(_contracts.getContracts(clientName));
   }
 }

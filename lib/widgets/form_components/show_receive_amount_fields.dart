@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:whiztech_flutter_first_project/widgets/form_components/receive_amount_components/contract_selection_search_box.dart';
+import 'package:whiztech_flutter_first_project/providers/contract_sign/contracts.dart';
+import 'package:whiztech_flutter_first_project/providers/received_amounts/received_amounts.dart';
+import 'package:whiztech_flutter_first_project/widgets/form_components/reused_fields/custom_selection_search_box.dart';
 import 'package:whiztech_flutter_first_project/widgets/form_components/reused_fields/custom_textform_field.dart';
 import '../../providers/received_amounts/received_amount_provider.dart';
 import '../../utils/form_validator.dart';
@@ -25,12 +27,17 @@ class _ShowReceiveAmountFieldsState extends State<ShowReceiveAmountFields> {
   final TextEditingController _contractDateController = TextEditingController();
   final TextEditingController _balanceAmountController =
       TextEditingController();
-  late ReceivedAmountProvider provider;
+  late ReceivedAmountProvider _receivedAmountProvider;
+  late Contracts _contracts;
+  late ReceivedAmounts _receivedAmounts;
 
   @override
   void initState() {
     super.initState();
-    provider = Provider.of<ReceivedAmountProvider>(context, listen: false);
+    _receivedAmountProvider =
+        Provider.of<ReceivedAmountProvider>(context, listen: false);
+    _contracts = Provider.of<Contracts>(context, listen: false);
+    _receivedAmounts = Provider.of<ReceivedAmounts>(context, listen: false);
   }
 
   @override
@@ -49,15 +56,16 @@ class _ShowReceiveAmountFieldsState extends State<ShowReceiveAmountFields> {
       children: [
         BottomSheetField(
           title: 'Contract: ',
-          child: ContractSelectionSearchBox(
+          child: CustomSelectionSearchBox(
             firstFocusNode: _searchContractFocusNode,
-            validationCallBack: FormValidator.validateContractClient,
+            validationCallBack:
+                FormValidator.validateContractClientCaseSensitive,
+            onSavedCallBack: _onSavedCallBack,
+            onSuggestionSelectedCallBack: _onSuggestionSelectedCallBack,
+            suggestionsCallBack: _suggestionsCallBack,
+            itemBuilderCallBack: _itemBuilderCallBack,
             keyboardType: TextInputType.name,
-            currentFieldCallBack: _contractCallBack,
-            contractIdCallBack: _contractIdCallBack,
             hintText: 'Search contract client here',
-            contractAmountController: _contractAmountController,
-            contractDateController: _contractDateController,
           ),
         ),
         BottomSheetField(
@@ -91,7 +99,7 @@ class _ShowReceiveAmountFieldsState extends State<ShowReceiveAmountFields> {
             currentFieldCallBack: _receiveAmountCallBack,
             keyboardType: TextInputType.number,
             firstFocusNode: _receiveAmountFocusNode,
-            validationCallBack: FormValidator.validateReceivedAmount,
+            validationCallBack: FormValidator.validateAmount,
             onReceivedAmountChangeCallBack: _onReceivedAmountChangeCallBack,
           ),
         ),
@@ -111,6 +119,37 @@ class _ShowReceiveAmountFieldsState extends State<ShowReceiveAmountFields> {
     );
   }
 
+  Widget _itemBuilderCallBack(context, suggestion) {
+    return ListTile(
+      title: Text(suggestion.split(':').first),
+    );
+  }
+
+  List<String> _suggestionsCallBack(pattern) {
+    return _contracts.getContractClients(pattern);
+  }
+
+  void _onSuggestionSelectedCallBack(
+      String suggestion, TextEditingController controller) {
+    controller.text = suggestion.split(':').first;
+    final contractId = suggestion.split(':').last;
+    _contractIdCallBack(contractId);
+    final selectedContract = _contracts.getSingleContractById(contractId);
+    final receivedAmount =
+        _receivedAmounts.getByContractId(selectedContract.id!);
+    double receivedDouble = 0.0;
+    if (receivedAmount != null) {
+      receivedDouble = receivedAmount.receiveAmount;
+    }
+    double remainingAmount = selectedContract.netAmount - receivedDouble;
+    _contractAmountController.text = remainingAmount.toStringAsFixed(1);
+    _contractDateController.text = selectedContract.contractStartDate;
+  }
+
+  void _onSavedCallBack(String contractClient) {
+    _contractCallBack(contractClient);
+  }
+
   void _onReceivedAmountChangeCallBack(String? amount) {
     // change balance amount on receive amount change
     if (amount == null || amount.isEmpty || double.tryParse(amount) == null) {
@@ -124,26 +163,26 @@ class _ShowReceiveAmountFieldsState extends State<ShowReceiveAmountFields> {
   }
 
   void _contractCallBack(String contract) {
-    provider.contract = contract;
+    _receivedAmountProvider.contract = contract;
   }
 
   void _contractIdCallBack(String id) {
-    provider.contractId = id;
+    _receivedAmountProvider.contractId = id;
   }
 
   void _contractDateCallBack(String contractDate) {
-    provider.contractDate = contractDate;
+    _receivedAmountProvider.contractDate = contractDate;
   }
 
   void _contractAmountCallBack(String contractAmount) {
-    provider.contractAmount = double.parse(contractAmount);
+    _receivedAmountProvider.contractAmount = double.parse(contractAmount);
   }
 
   void _receiveAmountCallBack(String receiveAmount) {
-    provider.receiveAmount = double.parse(receiveAmount);
+    _receivedAmountProvider.receiveAmount = double.parse(receiveAmount);
   }
 
   void _balanceAmountCallBack(String balanceAmount) {
-    provider.balanceAmount = double.parse(balanceAmount);
+    _receivedAmountProvider.balanceAmount = double.parse(balanceAmount);
   }
 }

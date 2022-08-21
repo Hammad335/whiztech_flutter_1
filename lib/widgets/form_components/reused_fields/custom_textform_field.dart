@@ -12,7 +12,9 @@ class CustomTextFormField extends StatefulWidget {
   bool? readOnly;
   TextEditingController? currentController;
   bool? shouldPassContext;
-  Function(String?)? onReceivedAmountChangeCallBack;
+  Function? onReceivedAmountChangeCallBack;
+  Function? contractAmountOnChangedCallBack;
+  String? fieldName;
 
   CustomTextFormField({
     required this.firstFocusNode,
@@ -25,6 +27,8 @@ class CustomTextFormField extends StatefulWidget {
     this.currentController,
     required this.validationCallBack,
     this.onReceivedAmountChangeCallBack,
+    this.contractAmountOnChangedCallBack,
+    this.fieldName,
   });
 
   @override
@@ -47,7 +51,13 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
           ? TextInputAction.done
           : TextInputAction.next,
       keyboardType: widget.keyboardType,
-      onChanged: widget.onReceivedAmountChangeCallBack,
+      onChanged: (value) {
+        if (widget.onReceivedAmountChangeCallBack != null) {
+          widget.onReceivedAmountChangeCallBack!(value);
+        } else if (widget.contractAmountOnChangedCallBack != null) {
+          widget.contractAmountOnChangedCallBack!(value, widget.fieldName);
+        }
+      },
       onFieldSubmitted: (_) {
         if (widget.nextFocusNode != null) {
           FocusScope.of(context).requestFocus(widget.nextFocusNode);

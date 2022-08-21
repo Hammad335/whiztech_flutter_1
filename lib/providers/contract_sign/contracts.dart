@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../models/contract.dart';
+import 'package:collection/collection.dart';
 
 class Contracts with ChangeNotifier {
   List<Contract> _contracts = [];
@@ -70,17 +71,26 @@ class Contracts with ChangeNotifier {
 
   bool doesExist(String client) {
     bool doesExist = false;
-    try {
-      _contracts.firstWhere((element) {
-        if (element.clientSelection.toLowerCase() == client.toLowerCase()) {
-          return doesExist = true;
-        } else {
-          return doesExist = false;
-        }
-      });
-    } catch (e) {
-      doesExist = false;
-    }
+    _contracts.firstWhereOrNull((element) {
+      if (element.clientSelection.trim().toLowerCase() ==
+          client.trim().toLowerCase()) {
+        return doesExist = true;
+      } else {
+        return doesExist = false;
+      }
+    });
+    return doesExist;
+  }
+
+  bool doesExistCaseSensitive(String client) {
+    bool doesExist = false;
+    _contracts.firstWhereOrNull((element) {
+      if (element.clientSelection.trim() == client.trim()) {
+        return doesExist = true;
+      } else {
+        return doesExist = false;
+      }
+    });
     return doesExist;
   }
 }

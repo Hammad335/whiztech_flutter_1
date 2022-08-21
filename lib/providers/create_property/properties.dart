@@ -34,4 +34,16 @@ class Properties with ChangeNotifier {
     });
     return doesExist;
   }
+
+  bool doesExistCaseSensitive(String property) {
+    bool doesExist = false;
+    _properties.firstWhereOrNull((element) {
+      if (element.name.trim() == property.trim()) {
+        return doesExist = true;
+      } else {
+        return doesExist = false;
+      }
+    });
+    return doesExist;
+  }
 }

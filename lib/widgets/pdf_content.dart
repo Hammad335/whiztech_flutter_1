@@ -71,6 +71,42 @@ class PdfContent extends StatelessWidget {
                   receivedAmount:
                       receivedAmounts.getByContractId(contract.id!)))
               .toList(),
+          SizedBox(height: 40),
+          Row(
+            children: [
+              SizedBox(
+                width: 6.5 * PdfPageFormat.cm,
+                child: Text(
+                  'Total :',
+                  style: kPwTitleLargePrimary,
+                ),
+              ),
+              SizedBox(
+                width: 3.8 * PdfPageFormat.cm,
+                child: Text(
+                  ledgerBalances.getTotalDebit.toStringAsFixed(1),
+                ),
+              ),
+              SizedBox(
+                width: 3.8 * PdfPageFormat.cm,
+                child: Text(
+                  receivedAmounts
+                      .getTotalCreditByName(ledgerBalances
+                          .ledgerBalanceContracts[0].clientSelection)
+                      .toStringAsFixed(1),
+                ),
+              ),
+              SizedBox(
+                width: 3.8 * PdfPageFormat.cm,
+                child: Text(
+                  (ledgerBalances.getTotalDebit -
+                          receivedAmounts.getTotalCreditByName(ledgerBalances
+                              .ledgerBalanceContracts[0].clientSelection))
+                      .toStringAsFixed(1),
+                ),
+              ),
+            ],
+          ),
         ],
       ),
     );
@@ -79,7 +115,7 @@ class PdfContent extends StatelessWidget {
   static Widget _ledgerRow(
       {required Contract contract, ReceivedAmount? receivedAmount}) {
     return Container(
-      padding: const EdgeInsets.only(left: 4, top: 8),
+      padding: const EdgeInsets.only(left: 4, top: 12),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
